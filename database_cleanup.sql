@@ -113,3 +113,4 @@ SELECT
   (SELECT COUNT(*) FROM profiles) as total_profiles,
   (SELECT COUNT(*) FROM models) as total_models,
   (SELECT COUNT(*) FROM downloads) as total_downloads;
+
