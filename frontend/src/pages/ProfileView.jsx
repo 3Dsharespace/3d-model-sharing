@@ -39,11 +39,25 @@ const ProfileView = () => {
     const fetchProfileData = async () => {
       try {
         setLoading(true)
-        const { profile: profileData, error: profileError } = await firebaseHelpers.getProfileByUsername(username)
-        if (profileError) {
-          setError(profileError)
+        let profileData = null
+
+        // Primary lookup by username from route.
+        const byUsername = await firebaseHelpers.getProfileByUsername(username)
+        if (byUsername.profile) {
+          profileData = byUsername.profile
+        } else {
+          // Fallback: support routes that pass Firebase UID directly.
+          const byId = await firebaseHelpers.getProfile(username)
+          if (byId.profile) {
+            profileData = byId.profile
+          }
+        }
+
+        if (!profileData) {
+          setError("The user profile you're looking for doesn't exist.")
           return
         }
+
         setProfile(profileData)
         
         const { models: userModels, error: modelsError } = await firebaseHelpers.getUserModels(profileData.id)

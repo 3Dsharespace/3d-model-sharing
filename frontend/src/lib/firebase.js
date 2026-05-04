@@ -74,7 +74,7 @@ export const firebaseHelpers = {
       const docSnap = await getDoc(docRef)
       
       if (docSnap.exists()) {
-        return { profile: docSnap.data(), error: null }
+        return { profile: { id: docSnap.id, ...docSnap.data() }, error: null }
       } else {
         return { profile: null, error: 'Profile not found' }
       }

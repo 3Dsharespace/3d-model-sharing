@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { auth, firebaseHelpers } from '../lib/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 
@@ -16,9 +16,19 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
+  const resolvedRef = useRef(false)
 
   useEffect(() => {
     console.log('🔍 AuthContext: Checking existing authentication...')
+    resolvedRef.current = false
+
+    const timeout = setTimeout(() => {
+      if (!resolvedRef.current) {
+        console.log('⏰ AuthContext: Auth check taking too long, stopping loading')
+        setLoading(false)
+      }
+    }, 5000)
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       console.log('🔄 AuthContext: Auth state changed:', firebaseUser ? 'SIGNED_IN' : 'SIGNED_OUT')
       if (firebaseUser) {
@@ -62,17 +72,11 @@ export const AuthProvider = ({ children }) => {
         setUser(null)
         setProfile(null)
       }
+      resolvedRef.current = true
+      clearTimeout(timeout)
       setLoading(false)
       console.log('🏁 AuthContext: Initial auth check complete, setting loading to false')
     })
-
-    // Force stop loading after 5 seconds
-    const timeout = setTimeout(() => {
-      if (loading) {
-        console.log('⏰ AuthContext: Force stopping loading after 5 seconds')
-        setLoading(false)
-      }
-    }, 5000)
 
     return () => {
       unsubscribe()
