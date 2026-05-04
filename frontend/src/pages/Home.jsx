@@ -58,16 +58,16 @@ const Home = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-gray-950">
         <div className="text-center max-w-md mx-auto px-4">
-          <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-red-600 dark:text-red-400 text-2xl">⚠️</span>
+          <div className="w-16 h-16 bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-red-400 text-2xl">⚠️</span>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Something went wrong</h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
+          <h3 className="text-lg font-semibold text-white mb-2">Something went wrong</h3>
+          <p className="text-gray-400 mb-6">{error}</p>
           <button 
             onClick={() => window.location.reload()}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="px-6 py-3 bg-gray-100 text-gray-900 rounded-lg hover:bg-white transition-colors font-medium"
           >
             Try Again
           </button>
@@ -80,10 +80,10 @@ const Home = () => {
     <div className="space-y-10">
       {/* Simple hero */}
       <section className="py-8 sm:py-10">
-        <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">
+        <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
           Share and discover 3D models
         </h1>
-        <p className="mt-3 text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
+        <p className="mt-3 text-base sm:text-lg text-gray-400 max-w-2xl">
           A simple place to upload your work and explore models from the community.
         </p>
         <div className="mt-6 flex flex-col sm:flex-row gap-3">
@@ -101,8 +101,8 @@ const Home = () => {
         <div className="card">
           <div className="card-body flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Models</p>
-              <p className="text-2xl font-semibold text-gray-900 dark:text-white">{stats.totalModels}</p>
+              <p className="text-sm text-gray-400">Models</p>
+              <p className="text-2xl font-semibold text-white">{stats.totalModels}</p>
             </div>
             <Calendar className="w-5 h-5 text-gray-400" />
           </div>
@@ -110,8 +110,8 @@ const Home = () => {
         <div className="card">
           <div className="card-body flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Downloads</p>
-              <p className="text-2xl font-semibold text-gray-900 dark:text-white">{stats.totalDownloads}</p>
+              <p className="text-sm text-gray-400">Downloads</p>
+              <p className="text-2xl font-semibold text-white">{stats.totalDownloads}</p>
             </div>
             <Download className="w-5 h-5 text-gray-400" />
           </div>
@@ -122,10 +122,10 @@ const Home = () => {
       <section className="space-y-4">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Recent models</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Latest uploads from the community.</p>
+            <h2 className="text-xl font-semibold text-white">Recent models</h2>
+            <p className="text-sm text-gray-400 mt-1">Latest uploads from the community.</p>
           </div>
-          <Link to="/explore" className="text-sm font-medium text-gray-700 dark:text-gray-200 hover:underline">
+          <Link to="/explore" className="text-sm font-medium text-gray-300 hover:text-white hover:underline">
             View all
           </Link>
         </div>

@@ -43,24 +43,24 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-950 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-16 w-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-            <span className="text-white font-bold text-2xl">3D</span>
+          <div className="mx-auto h-16 w-16 bg-gray-100 rounded-2xl flex items-center justify-center shadow-sm">
+            <span className="text-gray-900 font-bold text-2xl">3D</span>
           </div>
-          <h2 className="mt-8 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+          <h2 className="mt-8 text-center text-3xl font-extrabold text-white">
             Welcome back
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-2 text-center text-sm text-gray-400">
             Sign in to your account to continue
           </p>
-          <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-2 text-center text-sm text-gray-400">
             Don't have an account?{' '}
             <Link
               to="/signup"
-              className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+              className="font-medium text-gray-200 hover:text-white transition-colors"
             >
               Create one here
             </Link>
@@ -68,12 +68,12 @@ const Login = () => {
         </div>
         
         {/* Form */}
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6 bg-gray-900 border border-gray-800 rounded-2xl p-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 animate-in slide-in-from-top-2 duration-300">
+            <div className="bg-red-900/20 border border-red-800 rounded-xl p-4 animate-in slide-in-from-top-2 duration-300">
               <div className="flex items-center">
-                <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mr-2 flex-shrink-0" />
-                <div className="text-sm text-red-800 dark:text-red-200">{error}</div>
+                <AlertCircle className="w-5 h-5 text-red-400 mr-2 flex-shrink-0" />
+                <div className="text-sm text-red-200">{error}</div>
               </div>
             </div>
           )}
@@ -81,7 +81,7 @@ const Login = () => {
           <div className="space-y-4">
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
                 Email address
               </label>
               <div className="relative">
@@ -101,13 +101,13 @@ const Login = () => {
                   onFocus={() => handleInputFocus('email')}
                   onBlur={() => handleInputBlur('email')}
                   className={`
-                    block w-full pl-10 pr-3 py-3 border rounded-xl text-gray-900 dark:text-white 
-                    bg-white dark:bg-gray-800 placeholder-gray-500 dark:placeholder-gray-400
-                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                    block w-full pl-10 pr-3 py-3 border rounded-xl text-gray-100
+                    bg-gray-900 placeholder-gray-500
+                    focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500
                     transition-all duration-200
                     ${isFocused.email 
-                      ? 'border-blue-500 shadow-lg shadow-blue-500/25' 
-                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
+                      ? 'border-gray-500' 
+                      : 'border-gray-700 hover:border-gray-600'
                     }
                   `}
                   placeholder="Enter your email"
@@ -117,7 +117,7 @@ const Login = () => {
             
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
                 Password
               </label>
               <div className="relative">
@@ -137,13 +137,13 @@ const Login = () => {
                   onFocus={() => handleInputFocus('password')}
                   onBlur={() => handleInputBlur('password')}
                   className={`
-                    block w-full pl-10 pr-12 py-3 border rounded-xl text-gray-900 dark:text-white 
-                    bg-white dark:bg-gray-800 placeholder-gray-500 dark:placeholder-gray-400
-                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                    block w-full pl-10 pr-12 py-3 border rounded-xl text-gray-100
+                    bg-gray-900 placeholder-gray-500
+                    focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500
                     transition-all duration-200
                     ${isFocused.password 
-                      ? 'border-blue-500 shadow-lg shadow-blue-500/25' 
-                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
+                      ? 'border-gray-500' 
+                      : 'border-gray-700 hover:border-gray-600'
                     }
                   `}
                   placeholder="Enter your password"
@@ -151,7 +151,7 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-300 transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -164,7 +164,7 @@ const Login = () => {
             <div className="text-sm">
               <Link
                 to="/forgot-password"
-                className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                className="font-medium text-gray-300 hover:text-white transition-colors"
               >
                 Forgot your password?
               </Link>
@@ -181,7 +181,7 @@ const Login = () => {
                 text-sm font-medium rounded-xl text-white transition-all duration-200
                 ${loading 
                   ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+                  : 'bg-gray-100 text-gray-900 hover:bg-white shadow-sm'
                 }
               `}
             >
@@ -193,7 +193,7 @@ const Login = () => {
               ) : (
                 <>
                   <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                    <CheckCircle className="h-5 w-5 text-blue-300 group-hover:text-blue-200 transition-colors" />
+                    <CheckCircle className="h-5 w-5 text-gray-500 group-hover:text-gray-700 transition-colors" />
                   </span>
                   Sign in
                 </>
@@ -203,7 +203,7 @@ const Login = () => {
 
           {/* Demo Account Info */}
           <div className="text-center">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-gray-500">
               Demo account: demo@example.com / demo123
             </p>
           </div>

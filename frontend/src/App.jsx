@@ -11,6 +11,9 @@ import ProfileView from './pages/ProfileView'
 import ModelDetail from './pages/ModelDetail'
 import Dashboard from './pages/Dashboard'
 import Explore from './pages/Explore'
+import Privacy from './pages/Privacy'
+import Terms from './pages/Terms'
+import Contact from './pages/Contact'
 
 function App() {
   return (
@@ -27,6 +30,9 @@ function App() {
             <Route path="/model/:id" element={<ModelDetail />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/explore" element={<Explore />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/contact" element={<Contact />} />
           </Routes>
         </Layout>
       </ThemeProvider>

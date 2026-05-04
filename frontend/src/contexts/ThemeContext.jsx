@@ -12,18 +12,13 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
-    // Check localStorage first, then system preference
+    // Check localStorage first, default to dark theme for a simple dark-first UI
     const savedTheme = localStorage.getItem('theme')
     if (savedTheme) {
       return savedTheme
     }
-    
-    // Check system preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark'
-    }
-    
-    return 'light'
+
+    return 'dark'
   })
 
   useEffect(() => {
