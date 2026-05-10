@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { firebaseHelpers } from '../lib/firebase'
 import { 
@@ -22,7 +22,6 @@ import SearchBar from '../components/ui/SearchBar'
 
 const Explore = () => {
   const [models, setModels] = useState([])
-  const [filteredModels, setFilteredModels] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
@@ -58,7 +57,6 @@ const Explore = () => {
           setError(error)
         } else {
           setModels(allModels)
-          setFilteredModels(allModels)
         }
       } catch (err) {
         setError('Failed to load models')
@@ -71,7 +69,8 @@ const Explore = () => {
     fetchModels()
   }, [])
 
-  useEffect(() => {
+  // ⚡ Bolt: Replace useEffect with useMemo for derived state to prevent double re-renders
+  const filteredModels = useMemo(() => {
     let filtered = [...models]
 
     // Apply search filter
@@ -104,7 +103,7 @@ const Explore = () => {
       }
     })
 
-    setFilteredModels(filtered)
+    return filtered
   }, [models, searchQuery, selectedCategory, sortBy])
 
   const handleSearch = (query) => {
@@ -270,7 +269,7 @@ const Explore = () => {
           </p>
           {searchQuery && (
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Search results for "{searchQuery}"
+              Search results for &quot;{searchQuery}&quot;
             </p>
           )}
         </div>

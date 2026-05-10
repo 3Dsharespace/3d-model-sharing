@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { Download, Eye, Calendar, User, Tag } from 'lucide-react'
 
-const ModelCard = ({ model }) => {
+// ⚡ Bolt: Added React.memo to prevent re-rendering when parent lists sort/filter
+const ModelCard = memo(({ model }) => {
   const formatFileSize = (bytes) => {
     if (!bytes) return 'Unknown'
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
@@ -101,6 +102,8 @@ const ModelCard = ({ model }) => {
       </Link>
     </div>
   )
-}
+})
+
+ModelCard.displayName = 'ModelCard'
 
 export default ModelCard
