@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { firebaseHelpers } from '../lib/firebase'
 import { 
@@ -22,7 +22,6 @@ import SearchBar from '../components/ui/SearchBar'
 
 const Explore = () => {
   const [models, setModels] = useState([])
-  const [filteredModels, setFilteredModels] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
@@ -58,7 +57,6 @@ const Explore = () => {
           setError(error)
         } else {
           setModels(allModels)
-          setFilteredModels(allModels)
         }
       } catch (err) {
         setError('Failed to load models')
@@ -71,7 +69,10 @@ const Explore = () => {
     fetchModels()
   }, [])
 
-  useEffect(() => {
+  // Optimization: Use useMemo for derived state instead of useEffect + useState
+  // This prevents double re-renders (one for deps changing, one for state update)
+  // when models, searchQuery, selectedCategory, or sortBy change.
+  const filteredModels = useMemo(() => {
     let filtered = [...models]
 
     // Apply search filter
@@ -104,8 +105,31 @@ const Explore = () => {
       }
     })
 
-    setFilteredModels(filtered)
+    return filtered
   }, [models, searchQuery, selectedCategory, sortBy])
+
+  // Optimization: Memoize the calculation of aggregate stats in a single pass.
+  // This reduces multiple O(N) array traversals to a single O(N) traversal
+  // and prevents recalculation on unrelated state changes (like filter/sort).
+  const stats = useMemo(() => {
+    let totalDownloads = 0
+    let totalViews = 0
+    const creators = new Set()
+
+    for (const model of models) {
+      totalDownloads += (model.downloads_count || 0)
+      totalViews += (model.view_count || 0)
+      if (model.creator?.username) {
+        creators.add(model.creator.username)
+      }
+    }
+
+    return {
+      totalDownloads,
+      totalViews,
+      activeCreators: creators.size
+    }
+  }, [models])
 
   const handleSearch = (query) => {
     setSearchQuery(query)
@@ -174,19 +198,19 @@ const Explore = () => {
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {models.reduce((sum, model) => sum + (model.downloads_count || 0), 0)}
+                {stats.totalDownloads}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Total Downloads</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {models.reduce((sum, model) => sum + (model.view_count || 0), 0)}
+                {stats.totalViews}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Total Views</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-                {new Set(models.map(m => m.creator?.username).filter(Boolean)).size}
+                {stats.activeCreators}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Active Creators</div>
             </div>
