@@ -22,7 +22,6 @@ import SearchBar from '../components/ui/SearchBar'
 
 const Explore = () => {
   const [models, setModels] = useState([])
-  const [filteredModels, setFilteredModels] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
@@ -58,7 +57,6 @@ const Explore = () => {
           setError(error)
         } else {
           setModels(allModels)
-          setFilteredModels(allModels)
         }
       } catch (err) {
         setError('Failed to load models')
@@ -71,15 +69,17 @@ const Explore = () => {
     fetchModels()
   }, [])
 
-  useEffect(() => {
+  // Memoize filtered models to prevent unnecessary state updates and re-renders
+  const filteredModels = React.useMemo(() => {
     let filtered = [...models]
 
     // Apply search filter
     if (searchQuery) {
+      const lowerQuery = searchQuery.toLowerCase()
       filtered = filtered.filter(model => 
-        model.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        model.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        model.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        model.title?.toLowerCase().includes(lowerQuery) ||
+        model.description?.toLowerCase().includes(lowerQuery) ||
+        model.tags?.some(tag => tag.toLowerCase().includes(lowerQuery))
       )
     }
 
@@ -89,7 +89,7 @@ const Explore = () => {
     }
 
     // Apply sorting
-    filtered.sort((a, b) => {
+    return filtered.sort((a, b) => {
       switch (sortBy) {
         case 'newest':
           return new Date(b.created_at) - new Date(a.created_at)
@@ -103,8 +103,6 @@ const Explore = () => {
           return 0
       }
     })
-
-    setFilteredModels(filtered)
   }, [models, searchQuery, selectedCategory, sortBy])
 
   const handleSearch = (query) => {
@@ -118,6 +116,11 @@ const Explore = () => {
   const handleSortChange = (sort) => {
     setSortBy(sort)
   }
+
+  // Memoize top-level statistics to avoid recalculations on every render
+  const totalDownloads = React.useMemo(() => models.reduce((sum, model) => sum + (model.downloads_count || 0), 0), [models])
+  const totalViews = React.useMemo(() => models.reduce((sum, model) => sum + (model.view_count || 0), 0), [models])
+  const activeCreators = React.useMemo(() => new Set(models.map(m => m.creator?.username).filter(Boolean)).size, [models])
 
   if (loading) {
     return (
@@ -174,19 +177,19 @@ const Explore = () => {
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {models.reduce((sum, model) => sum + (model.downloads_count || 0), 0)}
+                {totalDownloads}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Total Downloads</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {models.reduce((sum, model) => sum + (model.view_count || 0), 0)}
+                {totalViews}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Total Views</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-                {new Set(models.map(m => m.creator?.username).filter(Boolean)).size}
+                {activeCreators}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Active Creators</div>
             </div>
