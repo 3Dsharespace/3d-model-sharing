@@ -1,24 +1,24 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { Download, Eye, Calendar, User, Tag } from 'lucide-react'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Download, Eye, Calendar, User, Tag } from 'lucide-react';
 
 const ModelCard = ({ model }) => {
-  const formatFileSize = (bytes) => {
-    if (!bytes) return 'Unknown'
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(1024))
-    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i]
-  }
+  const formatFileSize = bytes => {
+    if (!bytes) return 'Unknown';
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + ' ' + sizes[i];
+  };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return 'Unknown'
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    })
-  }
+  const formatDate = dateString => {
+    if (!dateString) return 'Unknown';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
 
   return (
     <div className="group bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
@@ -38,19 +38,19 @@ const ModelCard = ({ model }) => {
             </div>
           )}
         </div>
-        
+
         {/* Content */}
         <div className="p-5">
           {/* Title */}
           <h3 className="font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 text-lg group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
             {model.title}
           </h3>
-          
+
           {/* Description */}
           <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 text-sm leading-relaxed">
             {model.description || 'No description available'}
           </p>
-          
+
           {/* Tags */}
           {model.tags && model.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 mb-4">
@@ -69,7 +69,7 @@ const ModelCard = ({ model }) => {
               )}
             </div>
           )}
-          
+
           {/* Stats */}
           <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
             <div className="flex items-center space-x-4">
@@ -86,7 +86,7 @@ const ModelCard = ({ model }) => {
               {model.category || 'other'}
             </span>
           </div>
-          
+
           {/* Creator & Date */}
           <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
             <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
@@ -100,7 +100,10 @@ const ModelCard = ({ model }) => {
         </div>
       </Link>
     </div>
-  )
-}
+  );
+};
 
-export default ModelCard
+// ⚡ Bolt Optimization: Added React.memo() to prevent unnecessary re-renders
+// when the parent component re-renders but the model prop hasn't changed.
+// This is especially beneficial in lists like on the Explore page.
+export default React.memo(ModelCard);

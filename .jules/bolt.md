@@ -1,0 +1,3 @@
+## 2025-02-14 - Removed useEffect Derived State Anti-pattern
+**Learning:** Found an instance in `Explore.jsx` where `useEffect` was being used to compute `filteredModels` derived state based on `searchQuery`, `selectedCategory`, and `sortBy`. This anti-pattern forces an extra render pass (component renders with old state -> useEffect runs -> state updates -> component renders again).
+**Action:** Replace `useEffect` and an associated `useState` variable with `useMemo` when computing derived state from other state variables. This eliminates the extra render cycle and caches the potentially expensive filtering/sorting operations.

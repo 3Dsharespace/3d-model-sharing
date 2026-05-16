@@ -1,37 +1,37 @@
-import React, { useState } from 'react'
-import { Search, Filter, X } from 'lucide-react'
+import React, { useState } from 'react';
+import { Search, Filter, X } from 'lucide-react';
 
-const SearchBar = ({ 
-  onSearch, 
-  placeholder = "Search 3D models...", 
+const SearchBar = ({
+  onSearch,
+  placeholder = 'Search 3D models...',
   showFilters = false,
-  className = '' 
+  className = '',
 }) => {
-  const [query, setQuery] = useState('')
-  const [isFocused, setIsFocused] = useState(false)
+  const [query, setQuery] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = e => {
+    e.preventDefault();
     if (query.trim()) {
-      onSearch(query.trim())
+      onSearch(query.trim());
     }
-  }
+  };
 
   const handleClear = () => {
-    setQuery('')
-    onSearch('')
-  }
+    setQuery('');
+    onSearch('');
+  };
 
   return (
     <div className={`relative ${className}`}>
       <form onSubmit={handleSubmit} className="relative">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          
+
           <input
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={e => setQuery(e.target.value)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             placeholder={placeholder}
@@ -44,7 +44,7 @@ const SearchBar = ({
               ${isFocused ? 'shadow-lg' : 'shadow-sm'}
             `}
           />
-          
+
           {query && (
             <button
               type="button"
@@ -54,7 +54,7 @@ const SearchBar = ({
               <X className="w-4 h-4" />
             </button>
           )}
-          
+
           <button
             type="submit"
             disabled={!query.trim()}
@@ -64,7 +64,7 @@ const SearchBar = ({
           </button>
         </div>
       </form>
-      
+
       {showFilters && (
         <button className="mt-3 inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
           <Filter className="w-4 h-4 mr-2" />
@@ -72,7 +72,7 @@ const SearchBar = ({
         </button>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default SearchBar
+export default SearchBar;

@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { firebaseHelpers } from '../lib/firebase'
-import { 
-  Download, 
-  Calendar, 
-  User, 
-  Package, 
-  Eye, 
-  MapPin, 
-  Globe, 
-  Twitter, 
-  Instagram, 
-  Github, 
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { firebaseHelpers } from '../lib/firebase';
+import {
+  Download,
+  Calendar,
+  User,
+  Package,
+  Eye,
+  MapPin,
+  Globe,
+  Twitter,
+  Instagram,
+  Github,
   Linkedin,
   Edit3,
   Settings,
@@ -21,88 +21,92 @@ import {
   BookOpen,
   Palette,
   Camera,
-  Mail
-} from 'lucide-react'
-import ModelCard from '../components/ModelCard'
-import LoadingSpinner from '../components/ui/LoadingSpinner'
-import EmptyState from '../components/ui/EmptyState'
+  Mail,
+} from 'lucide-react';
+import ModelCard from '../components/ModelCard';
+import LoadingSpinner from '../components/ui/LoadingSpinner';
+import EmptyState from '../components/ui/EmptyState';
 
 const ProfileView = () => {
-  const { username } = useParams()
-  const [profile, setProfile] = useState(null)
-  const [models, setModels] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [activeTab, setActiveTab] = useState('models')
+  const { username } = useParams();
+  const [profile, setProfile] = useState(null);
+  const [models, setModels] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState('models');
 
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        setLoading(true)
-        let profileData = null
+        setLoading(true);
+        let profileData = null;
 
         // Primary lookup by username from route.
-        const byUsername = await firebaseHelpers.getProfileByUsername(username)
+        const byUsername = await firebaseHelpers.getProfileByUsername(username);
         if (byUsername.profile) {
-          profileData = byUsername.profile
+          profileData = byUsername.profile;
         } else {
           // Fallback: support routes that pass Firebase UID directly.
-          const byId = await firebaseHelpers.getProfile(username)
+          const byId = await firebaseHelpers.getProfile(username);
           if (byId.profile) {
-            profileData = byId.profile
+            profileData = byId.profile;
           }
         }
 
         if (!profileData) {
-          setError("The user profile you're looking for doesn't exist.")
-          return
+          setError("The user profile you're looking for doesn't exist.");
+          return;
         }
 
-        setProfile(profileData)
-        
-        const { models: userModels, error: modelsError } = await firebaseHelpers.getUserModels(profileData.id)
+        setProfile(profileData);
+
+        const { models: userModels, error: modelsError } =
+          await firebaseHelpers.getUserModels(profileData.id);
         if (modelsError) {
-          console.error('Error fetching user models:', modelsError)
+          console.error('Error fetching user models:', modelsError);
         } else {
-          setModels(userModels)
+          setModels(userModels);
         }
       } catch (err) {
-        setError('Failed to load profile')
-        console.error('Error:', err)
+        setError('Failed to load profile');
+        console.error('Error:', err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
     if (username) {
-      fetchProfileData()
+      fetchProfileData();
     }
-  }, [username])
+  }, [username]);
 
-  const formatDate = (dateString) => {
-    if (!dateString) return 'Unknown'
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    })
-  }
+  const formatDate = dateString => {
+    if (!dateString) return 'Unknown';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
 
   const getTotalStats = () => {
     return {
-      downloads: models.reduce((sum, model) => sum + (model.downloads_count || 0), 0),
+      downloads: models.reduce(
+        (sum, model) => sum + (model.downloads_count || 0),
+        0
+      ),
       views: models.reduce((sum, model) => sum + (model.view_count || 0), 0),
-      models: models.length
-    }
-  }
+      models: models.length,
+    };
+  };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner size="lg" text="Loading profile..." />
       </div>
-    )
+    );
   }
 
   if (error || !profile) {
@@ -111,15 +115,17 @@ const ProfileView = () => {
         <EmptyState
           icon={User}
           title="Profile Not Found"
-          description={error || "The user profile you're looking for doesn't exist."}
+          description={
+            error || "The user profile you're looking for doesn't exist."
+          }
           actionText="Go Back Home"
           actionLink="/"
         />
       </div>
-    )
+    );
   }
 
-  const stats = getTotalStats()
+  const stats = getTotalStats();
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -170,7 +176,11 @@ const ProfileView = () => {
               </div>
 
               {/* Social Links */}
-              {(profile.website || profile.twitter || profile.instagram || profile.github || profile.linkedin) && (
+              {(profile.website ||
+                profile.twitter ||
+                profile.instagram ||
+                profile.github ||
+                profile.linkedin) && (
                 <div className="flex items-center space-x-4 mt-4">
                   {profile.website && (
                     <a
@@ -275,49 +285,68 @@ const ProfileView = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Additional Info */}
-        {(profile.location || profile.skills || profile.experience || profile.education) && (
+        {(profile.location ||
+          profile.skills ||
+          profile.experience ||
+          profile.education) && (
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               About {profile.display_name || profile.username}
             </h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {profile.location && (
                 <div className="flex items-start space-x-3">
                   <MapPin className="w-5 h-5 text-gray-400 mt-0.5" />
                   <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white">Location</h3>
-                    <p className="text-gray-600 dark:text-gray-400">{profile.location}</p>
+                    <h3 className="font-medium text-gray-900 dark:text-white">
+                      Location
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {profile.location}
+                    </p>
                   </div>
                 </div>
               )}
-              
+
               {profile.skills && (
                 <div className="flex items-start space-x-3">
                   <Palette className="w-5 h-5 text-gray-400 mt-0.5" />
                   <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white">Skills</h3>
-                    <p className="text-gray-600 dark:text-gray-400">{profile.skills}</p>
+                    <h3 className="font-medium text-gray-900 dark:text-white">
+                      Skills
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {profile.skills}
+                    </p>
                   </div>
                 </div>
               )}
-              
+
               {profile.experience && (
                 <div className="flex items-start space-x-3">
                   <TrendingUp className="w-5 h-5 text-gray-400 mt-0.5" />
                   <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white">Experience</h3>
-                    <p className="text-gray-600 dark:text-gray-400">{profile.experience}</p>
+                    <h3 className="font-medium text-gray-900 dark:text-white">
+                      Experience
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {profile.experience}
+                    </p>
                   </div>
                 </div>
               )}
-              
+
               {profile.education && (
                 <div className="flex items-start space-x-3">
                   <BookOpen className="w-5 h-5 text-gray-400 mt-0.5" />
                   <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white">Education</h3>
-                    <p className="text-gray-600 dark:text-gray-400">{profile.education}</p>
+                    <h3 className="font-medium text-gray-900 dark:text-white">
+                      Education
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {profile.education}
+                    </p>
                   </div>
                 </div>
               )}
@@ -331,11 +360,26 @@ const ProfileView = () => {
           <div className="border-b border-gray-200 dark:border-gray-700">
             <nav className="flex space-x-8 px-6">
               {[
-                { id: 'models', label: 'Models', icon: Package, count: models.length },
-                { id: 'collections', label: 'Collections', icon: BookOpen, count: 0 },
+                {
+                  id: 'models',
+                  label: 'Models',
+                  icon: Package,
+                  count: models.length,
+                },
+                {
+                  id: 'collections',
+                  label: 'Collections',
+                  icon: BookOpen,
+                  count: 0,
+                },
                 { id: 'likes', label: 'Likes', icon: Star, count: 0 },
-                { id: 'activity', label: 'Activity', icon: TrendingUp, count: 0 }
-              ].map((tab) => (
+                {
+                  id: 'activity',
+                  label: 'Activity',
+                  icon: TrendingUp,
+                  count: 0,
+                },
+              ].map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
@@ -384,9 +428,9 @@ const ProfileView = () => {
                         </select>
                       </div>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                      {models.map((model) => (
+                      {models.map(model => (
                         <ModelCard key={model.id} model={model} />
                       ))}
                     </div>
@@ -398,31 +442,43 @@ const ProfileView = () => {
             {activeTab === 'collections' && (
               <div className="text-center py-12">
                 <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Collections</h3>
-                <p className="text-gray-500 dark:text-gray-400">Collections feature coming soon!</p>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  Collections
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400">
+                  Collections feature coming soon!
+                </p>
               </div>
             )}
 
             {activeTab === 'likes' && (
               <div className="text-center py-12">
                 <Star className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Likes</h3>
-                <p className="text-gray-500 dark:text-gray-400">Likes feature coming soon!</p>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  Likes
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400">
+                  Likes feature coming soon!
+                </p>
               </div>
             )}
 
             {activeTab === 'activity' && (
               <div className="text-center py-12">
                 <TrendingUp className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Activity</h3>
-                <p className="text-gray-500 dark:text-gray-400">Activity feed coming soon!</p>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  Activity
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400">
+                  Activity feed coming soon!
+                </p>
               </div>
             )}
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProfileView
+export default ProfileView;

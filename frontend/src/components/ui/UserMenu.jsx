@@ -1,39 +1,44 @@
-import { useState, useRef, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { useAuth } from '../../contexts/AuthContext'
-import { 
-  User, 
-  ChevronDown, 
-  Settings, 
-  LogOut, 
+import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import {
+  User,
+  ChevronDown,
+  Settings,
+  LogOut,
   Upload,
   Edit3,
-  LogIn
-} from 'lucide-react'
+  LogIn,
+} from 'lucide-react';
 
 const UserMenu = () => {
-  const { user, profile, logout } = useAuth()
-  const [isOpen, setIsOpen] = useState(false)
-  const menuRef = useRef(null)
+  const { user, profile, logout } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef(null);
 
   // Debug logging
-  console.log('🔍 UserMenu: Render state:', { user: !!user, profile: !!profile, userData: user, profileData: profile })
+  console.log('🔍 UserMenu: Render state:', {
+    user: !!user,
+    profile: !!profile,
+    userData: user,
+    profileData: profile,
+  });
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = event => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsOpen(false)
+        setIsOpen(false);
       }
-    }
+    };
 
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLogout = async () => {
-    await logout()
-    setIsOpen(false)
-  }
+    await logout();
+    setIsOpen(false);
+  };
 
   // If no user, show login link
   if (!user) {
@@ -45,13 +50,13 @@ const UserMenu = () => {
         <LogIn className="w-5 h-5" />
         <span className="font-medium">Login</span>
       </Link>
-    )
+    );
   }
 
   // Use fallback values if profile is missing
-  const profileExists = !!profile
-  const displayName = profile?.username || user.email?.split('@')[0] || 'User'
-  const avatarUrl = profile?.avatar_url
+  const profileExists = !!profile;
+  const displayName = profile?.username || user.email?.split('@')[0] || 'User';
+  const avatarUrl = profile?.avatar_url;
 
   return (
     <div className="relative" ref={menuRef}>
@@ -61,9 +66,9 @@ const UserMenu = () => {
       >
         <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
           {avatarUrl ? (
-            <img 
-              src={avatarUrl} 
-              alt={displayName} 
+            <img
+              src={avatarUrl}
+              alt={displayName}
               className="w-full h-full object-cover"
             />
           ) : (
@@ -71,7 +76,9 @@ const UserMenu = () => {
           )}
         </div>
         <span className="font-medium">{displayName}</span>
-        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown
+          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+        />
       </button>
 
       {isOpen && (
@@ -84,7 +91,7 @@ const UserMenu = () => {
               {user.email}
             </p>
           </div>
-          
+
           {profileExists ? (
             <>
               <Link
@@ -114,7 +121,7 @@ const UserMenu = () => {
               Complete Profile
             </Link>
           )}
-          
+
           <Link
             to="/upload"
             className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -123,7 +130,7 @@ const UserMenu = () => {
             <Upload className="w-4 h-4 mr-2" />
             Upload Model
           </Link>
-          
+
           <Link
             to="/dashboard"
             className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -132,7 +139,7 @@ const UserMenu = () => {
             <Settings className="w-4 h-4 mr-2" />
             Dashboard
           </Link>
-          
+
           <div className="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
             <button
               onClick={handleLogout}
@@ -145,7 +152,7 @@ const UserMenu = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default UserMenu
+export default UserMenu;

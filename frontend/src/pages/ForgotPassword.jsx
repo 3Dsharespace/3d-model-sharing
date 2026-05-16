@@ -1,32 +1,32 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Mail, ArrowLeft, ArrowRight } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Mail, ArrowLeft, ArrowRight } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState('')
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false)
-  const { forgotPassword, loading } = useAuth()
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const { forgotPassword, loading } = useAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    
+  const handleSubmit = async e => {
+    e.preventDefault();
+
     if (!email) {
-      setError('Please enter your email address')
-      return
+      setError('Please enter your email address');
+      return;
     }
 
-    setError('')
-    setSuccess(false)
-    
-    const result = await forgotPassword(email)
+    setError('');
+    setSuccess(false);
+
+    const result = await forgotPassword(email);
     if (result.success) {
-      setSuccess(true)
+      setSuccess(true);
     } else {
-      setError(result.error)
+      setError(result.error);
     }
-  }
+  };
 
   if (success) {
     return (
@@ -34,7 +34,10 @@ const ForgotPassword = () => {
         <div className="max-w-md w-full space-y-8">
           {/* Header */}
           <div className="text-center">
-            <Link to="/" className="inline-flex items-center text-2xl font-bold text-primary-600 dark:text-primary-400 mb-2">
+            <Link
+              to="/"
+              className="inline-flex items-center text-2xl font-bold text-primary-600 dark:text-primary-400 mb-2"
+            >
               <div className="w-8 h-8 bg-primary-600 rounded-lg mr-2 flex items-center justify-center">
                 <span className="text-white font-bold">3D</span>
               </div>
@@ -55,7 +58,7 @@ const ForgotPassword = () => {
                 Password reset link sent successfully!
               </p>
             </div>
-            
+
             <Link
               to="/login"
               className="inline-flex items-center text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300"
@@ -66,7 +69,7 @@ const ForgotPassword = () => {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -74,7 +77,10 @@ const ForgotPassword = () => {
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <Link to="/" className="inline-flex items-center text-2xl font-bold text-primary-600 dark:text-primary-400 mb-2">
+          <Link
+            to="/"
+            className="inline-flex items-center text-2xl font-bold text-primary-600 dark:text-primary-400 mb-2"
+          >
             <div className="w-8 h-8 bg-primary-600 rounded-lg mr-2 flex items-center justify-center">
               <span className="text-white font-bold">3D</span>
             </div>
@@ -84,14 +90,18 @@ const ForgotPassword = () => {
             Reset your password
           </h2>
           <p className="mt-2 text-sm text-secondary-600 dark:text-secondary-400">
-            Enter your email address and we'll send you a link to reset your password
+            Enter your email address and we'll send you a link to reset your
+            password
           </p>
         </div>
 
         {/* Form */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2"
+            >
               Email address
             </label>
             <div className="relative">
@@ -103,7 +113,7 @@ const ForgotPassword = () => {
                 autoComplete="email"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-secondary-300 dark:border-secondary-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-secondary-800 dark:text-white"
                 placeholder="Enter your email"
               />
@@ -147,7 +157,7 @@ const ForgotPassword = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ForgotPassword
+export default ForgotPassword;

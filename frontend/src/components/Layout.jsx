@@ -1,25 +1,24 @@
-import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { useTheme } from '../contexts/ThemeContext'
-import UserMenu from './ui/UserMenu'
-import ThemeToggle from './ui/ThemeToggle'
-import { Loader2 } from 'lucide-react'
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
+import UserMenu from './ui/UserMenu';
+import ThemeToggle from './ui/ThemeToggle';
+import { Loader2 } from 'lucide-react';
 
 const Layout = ({ children }) => {
-  const { loading, isAuthenticated, refreshAuth } = useAuth()
-  const { theme } = useTheme()
-  const location = useLocation()
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup'
+  const { loading, isAuthenticated, refreshAuth } = useAuth();
+  const { theme } = useTheme();
+  const location = useLocation();
+  const isAuthPage =
+    location.pathname === '/login' || location.pathname === '/signup';
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-950">
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-400 mb-4">
-            Loading your account...
-          </p>
+          <p className="text-gray-400 mb-4">Loading your account...</p>
           <div className="space-y-2">
             <button
               onClick={refreshAuth}
@@ -36,7 +35,7 @@ const Layout = ({ children }) => {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -49,9 +48,13 @@ const Layout = ({ children }) => {
               {/* Logo */}
               <Link to="/" className="flex items-center space-x-2">
                 <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
-                  <span className="text-gray-900 font-semibold text-sm">3D</span>
+                  <span className="text-gray-900 font-semibold text-sm">
+                    3D
+                  </span>
                 </div>
-                <span className="text-lg font-semibold text-white">ModelShare</span>
+                <span className="text-lg font-semibold text-white">
+                  ModelShare
+                </span>
               </Link>
 
               {/* Navigation */}
@@ -129,9 +132,7 @@ const Layout = ({ children }) => {
         </header>
 
         {/* Main content */}
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-          {children}
-        </main>
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">{children}</main>
 
         {/* Footer */}
         <footer className="bg-gray-950 border-t border-gray-800">
@@ -139,16 +140,22 @@ const Layout = ({ children }) => {
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
               <p>&copy; 2024 ModelShare</p>
               <div className="flex items-center gap-4">
-                <Link to="/privacy" className="hover:text-white">Privacy</Link>
-                <Link to="/terms" className="hover:text-white">Terms</Link>
-                <Link to="/contact" className="hover:text-white">Contact</Link>
+                <Link to="/privacy" className="hover:text-white">
+                  Privacy
+                </Link>
+                <Link to="/terms" className="hover:text-white">
+                  Terms
+                </Link>
+                <Link to="/contact" className="hover:text-white">
+                  Contact
+                </Link>
               </div>
             </div>
           </div>
         </footer>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

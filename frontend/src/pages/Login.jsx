@@ -1,46 +1,53 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { Mail, Lock, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  CheckCircle,
+} from 'lucide-react';
 
 const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [isFocused, setIsFocused] = useState({ email: false, password: false })
-  
-  const { login } = useAuth()
-  const navigate = useNavigate()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isFocused, setIsFocused] = useState({ email: false, password: false });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
     try {
-      const result = await login(email, password)
-      
+      const result = await login(email, password);
+
       if (result.success) {
-        navigate('/')
+        navigate('/');
       } else {
-        setError(result.error || 'Login failed')
+        setError(result.error || 'Login failed');
       }
     } catch (err) {
-      setError(err.message || 'An error occurred')
+      setError(err.message || 'An error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const handleInputFocus = (field) => {
-    setIsFocused(prev => ({ ...prev, [field]: true }))
-  }
+  const handleInputFocus = field => {
+    setIsFocused(prev => ({ ...prev, [field]: true }));
+  };
 
-  const handleInputBlur = (field) => {
-    setIsFocused(prev => ({ ...prev, [field]: false }))
-  }
+  const handleInputBlur = field => {
+    setIsFocused(prev => ({ ...prev, [field]: false }));
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 py-12 px-4 sm:px-6 lg:px-8">
@@ -66,9 +73,12 @@ const Login = () => {
             </Link>
           </p>
         </div>
-        
+
         {/* Form */}
-        <form className="mt-8 space-y-6 bg-gray-900 border border-gray-800 rounded-2xl p-6" onSubmit={handleSubmit}>
+        <form
+          className="mt-8 space-y-6 bg-gray-900 border border-gray-800 rounded-2xl p-6"
+          onSubmit={handleSubmit}
+        >
           {error && (
             <div className="bg-red-900/20 border border-red-800 rounded-xl p-4 animate-in slide-in-from-top-2 duration-300">
               <div className="flex items-center">
@@ -77,18 +87,23 @@ const Login = () => {
               </div>
             </div>
           )}
-          
+
           <div className="space-y-4">
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-300 mb-2"
+              >
                 Email address
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className={`w-5 h-5 transition-colors duration-200 ${
-                    isFocused.email ? 'text-blue-500' : 'text-gray-400'
-                  }`} />
+                  <Mail
+                    className={`w-5 h-5 transition-colors duration-200 ${
+                      isFocused.email ? 'text-blue-500' : 'text-gray-400'
+                    }`}
+                  />
                 </div>
                 <input
                   id="email"
@@ -97,7 +112,7 @@ const Login = () => {
                   autoComplete="email"
                   required
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={e => setEmail(e.target.value)}
                   onFocus={() => handleInputFocus('email')}
                   onBlur={() => handleInputBlur('email')}
                   className={`
@@ -105,26 +120,32 @@ const Login = () => {
                     bg-gray-900 placeholder-gray-500
                     focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500
                     transition-all duration-200
-                    ${isFocused.email 
-                      ? 'border-gray-500' 
-                      : 'border-gray-700 hover:border-gray-600'
+                    ${
+                      isFocused.email
+                        ? 'border-gray-500'
+                        : 'border-gray-700 hover:border-gray-600'
                     }
                   `}
                   placeholder="Enter your email"
                 />
               </div>
             </div>
-            
+
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-300 mb-2"
+              >
                 Password
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className={`w-5 h-5 transition-colors duration-200 ${
-                    isFocused.password ? 'text-blue-500' : 'text-gray-400'
-                  }`} />
+                  <Lock
+                    className={`w-5 h-5 transition-colors duration-200 ${
+                      isFocused.password ? 'text-blue-500' : 'text-gray-400'
+                    }`}
+                  />
                 </div>
                 <input
                   id="password"
@@ -133,7 +154,7 @@ const Login = () => {
                   autoComplete="current-password"
                   required
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={e => setPassword(e.target.value)}
                   onFocus={() => handleInputFocus('password')}
                   onBlur={() => handleInputBlur('password')}
                   className={`
@@ -141,9 +162,10 @@ const Login = () => {
                     bg-gray-900 placeholder-gray-500
                     focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500
                     transition-all duration-200
-                    ${isFocused.password 
-                      ? 'border-gray-500' 
-                      : 'border-gray-700 hover:border-gray-600'
+                    ${
+                      isFocused.password
+                        ? 'border-gray-500'
+                        : 'border-gray-700 hover:border-gray-600'
                     }
                   `}
                   placeholder="Enter your password"
@@ -153,7 +175,11 @@ const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-300 transition-colors"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -179,9 +205,10 @@ const Login = () => {
               className={`
                 group relative w-full flex justify-center py-3 px-4 border border-transparent 
                 text-sm font-medium rounded-xl text-white transition-all duration-200
-                ${loading 
-                  ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-gray-100 text-gray-900 hover:bg-white shadow-sm'
+                ${
+                  loading
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-gray-100 text-gray-900 hover:bg-white shadow-sm'
                 }
               `}
             >
@@ -210,7 +237,7 @@ const Login = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

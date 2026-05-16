@@ -1,197 +1,232 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { firebaseHelpers } from '../lib/firebase'
-import { Upload as UploadIcon, X, File, Image, CheckCircle, AlertCircle, Info } from 'lucide-react'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { firebaseHelpers } from '../lib/firebase';
+import {
+  Upload as UploadIcon,
+  X,
+  File,
+  Image,
+  CheckCircle,
+  AlertCircle,
+  Info,
+} from 'lucide-react';
 
 const Upload = () => {
-  const { user, profile } = useAuth()
-  const navigate = useNavigate()
-  
+  const { user, profile } = useAuth();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     category: 'other',
     tags: '',
-    is_public: true
-  })
-  
-  const [file, setFile] = useState(null)
-  const [thumbnail, setThumbnail] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [dragActive, setDragActive] = useState({ file: false, thumbnail: false })
-  const [uploadProgress, setUploadProgress] = useState(0)
+    is_public: true,
+  });
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target
+  const [file, setFile] = useState(null);
+  const [thumbnail, setThumbnail] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [dragActive, setDragActive] = useState({
+    file: false,
+    thumbnail: false,
+  });
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const handleInputChange = e => {
+    const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }))
-  }
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
 
   const handleFileSelect = (e, type) => {
-    const selectedFile = e.target.files[0]
+    const selectedFile = e.target.files[0];
     if (selectedFile) {
       if (type === 'file') {
-        setFile(selectedFile)
+        setFile(selectedFile);
       } else if (type === 'thumbnail') {
-        setThumbnail(selectedFile)
+        setThumbnail(selectedFile);
       }
     }
-  }
+  };
 
   const handleDrag = (e, type) => {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
     if (e.type === 'dragenter' || e.type === 'dragover') {
-      setDragActive(prev => ({ ...prev, [type]: true }))
+      setDragActive(prev => ({ ...prev, [type]: true }));
     } else if (e.type === 'dragleave') {
-      setDragActive(prev => ({ ...prev, [type]: false }))
+      setDragActive(prev => ({ ...prev, [type]: false }));
     }
-  }
+  };
 
   const handleDrop = (e, type) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setDragActive(prev => ({ ...prev, [type]: false }))
-    
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(prev => ({ ...prev, [type]: false }));
+
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const droppedFile = e.dataTransfer.files[0]
+      const droppedFile = e.dataTransfer.files[0];
       if (type === 'file') {
-        setFile(droppedFile)
+        setFile(droppedFile);
       } else if (type === 'thumbnail') {
-        setThumbnail(droppedFile)
+        setThumbnail(droppedFile);
       }
     }
-  }
+  };
 
-  const removeFile = (type) => {
+  const removeFile = type => {
     if (type === 'file') {
-      setFile(null)
+      setFile(null);
     } else if (type === 'thumbnail') {
-      setThumbnail(null)
+      setThumbnail(null);
     }
-  }
+  };
 
-  const formatFileSize = (bytes) => {
-    if (!bytes) return '0 Bytes'
-    const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-  }
+  const formatFileSize = bytes => {
+    if (!bytes) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
 
   const validateFile = (file, type) => {
     if (type === 'file') {
-      const allowedTypes = ['.obj', '.fbx', '.dae', '.blend', '.3ds', '.max', '.c4d', '.ma', '.mb', '.lwo', '.lws', '.ply', '.stl', '.wrl', '.x3d']
-      const fileExtension = '.' + file.name.split('.').pop().toLowerCase()
+      const allowedTypes = [
+        '.obj',
+        '.fbx',
+        '.dae',
+        '.blend',
+        '.3ds',
+        '.max',
+        '.c4d',
+        '.ma',
+        '.mb',
+        '.lwo',
+        '.lws',
+        '.ply',
+        '.stl',
+        '.wrl',
+        '.x3d',
+      ];
+      const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
       if (!allowedTypes.includes(fileExtension)) {
-        return 'Invalid file type. Please select a 3D model file.'
+        return 'Invalid file type. Please select a 3D model file.';
       }
-      if (file.size > 100 * 1024 * 1024) { // 100MB
-        return 'File size too large. Maximum size is 100MB.'
+      if (file.size > 100 * 1024 * 1024) {
+        // 100MB
+        return 'File size too large. Maximum size is 100MB.';
       }
     } else if (type === 'thumbnail') {
       if (!file.type.startsWith('image/')) {
-        return 'Please select an image file for the thumbnail.'
+        return 'Please select an image file for the thumbnail.';
       }
-      if (file.size > 10 * 1024 * 1024) { // 10MB
-        return 'Thumbnail size too large. Maximum size is 10MB.'
+      if (file.size > 10 * 1024 * 1024) {
+        // 10MB
+        return 'Thumbnail size too large. Maximum size is 10MB.';
       }
     }
-    return null
-  }
+    return null;
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    
+  const handleSubmit = async e => {
+    e.preventDefault();
+
     if (!user) {
-      setError('You must be logged in to upload models')
-      return
+      setError('You must be logged in to upload models');
+      return;
     }
 
     if (!file) {
-      setError('Please select a 3D model file')
-      return
+      setError('Please select a 3D model file');
+      return;
     }
 
     if (!thumbnail) {
-      setError('Please select a thumbnail image')
-      return
+      setError('Please select a thumbnail image');
+      return;
     }
 
     if (!formData.title.trim()) {
-      setError('Please enter a title for your model')
-      return
+      setError('Please enter a title for your model');
+      return;
     }
 
     // Validate files
-    const fileError = validateFile(file, 'file')
-    const thumbnailError = validateFile(thumbnail, 'thumbnail')
-    
+    const fileError = validateFile(file, 'file');
+    const thumbnailError = validateFile(thumbnail, 'thumbnail');
+
     if (fileError) {
-      setError(fileError)
-      return
+      setError(fileError);
+      return;
     }
-    
+
     if (thumbnailError) {
-      setError(thumbnailError)
-      return
+      setError(thumbnailError);
+      return;
     }
-    
-    setLoading(true)
-    setError('')
-    setUploadProgress(0)
-    
+
+    setLoading(true);
+    setError('');
+    setUploadProgress(0);
+
     try {
       // Simulate upload progress
       const progressInterval = setInterval(() => {
         setUploadProgress(prev => {
           if (prev >= 90) {
-            clearInterval(progressInterval)
-            return 90
+            clearInterval(progressInterval);
+            return 90;
           }
-          return prev + 10
-        })
-      }, 200)
+          return prev + 10;
+        });
+      }, 200);
 
       // Prepare model data
       const modelData = {
         title: formData.title.trim(),
         description: formData.description.trim(),
         category: formData.category,
-        tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+        tags: formData.tags
+          .split(',')
+          .map(tag => tag.trim())
+          .filter(tag => tag),
         user_id: user.uid,
-        is_public: formData.is_public
-      }
+        is_public: formData.is_public,
+      };
 
       // Upload model using Firebase
-      const result = await firebaseHelpers.uploadModel(modelData, file, thumbnail)
-      
-      clearInterval(progressInterval)
-      setUploadProgress(100)
-      
+      const result = await firebaseHelpers.uploadModel(
+        modelData,
+        file,
+        thumbnail
+      );
+
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+
       if (result.error) {
-        throw new Error(result.error)
+        throw new Error(result.error);
       }
 
       // Success - redirect to the new model
       setTimeout(() => {
-        navigate(`/model/${result.modelId}`)
-      }, 500)
-      
+        navigate(`/model/${result.modelId}`);
+      }, 500);
     } catch (err) {
-      setError(err.message || 'Failed to upload model')
-      setUploadProgress(0)
+      setError(err.message || 'Failed to upload model');
+      setUploadProgress(0);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   if (!user) {
-  return (
+    return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="text-center max-w-md mx-auto px-4">
           <div className="w-20 h-20 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -211,7 +246,7 @@ const Upload = () => {
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -232,18 +267,21 @@ const Upload = () => {
               <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mr-2" />
               <p className="text-red-800 dark:text-red-200">{error}</p>
             </div>
-                </div>
-              )}
+          </div>
+        )}
 
         {/* Basic Information */}
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
             Basic Information
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
                 Model Title *
               </label>
               <input
@@ -259,7 +297,10 @@ const Upload = () => {
             </div>
 
             <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label
+                htmlFor="category"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
                 Category
               </label>
               <select
@@ -281,7 +322,10 @@ const Upload = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
                 Description
               </label>
               <textarea
@@ -296,7 +340,10 @@ const Upload = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label htmlFor="tags" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label
+                htmlFor="tags"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
                 Tags (comma-separated)
               </label>
               <input
@@ -311,18 +358,18 @@ const Upload = () => {
             </div>
 
             <div className="md:col-span-2">
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
                   name="is_public"
                   checked={formData.is_public}
-                    onChange={handleInputChange}
+                  onChange={handleInputChange}
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
+                />
                 <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
                   Make this model public
-                  </span>
-                </label>
+                </span>
+              </label>
             </div>
           </div>
         </div>
@@ -332,23 +379,25 @@ const Upload = () => {
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
             3D Model File *
           </h2>
-          
+
           <div
             className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
               dragActive.file
                 ? 'border-blue-400 bg-blue-50 dark:bg-blue-900/20 scale-105'
                 : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
             }`}
-            onDragEnter={(e) => handleDrag(e, 'file')}
-            onDragLeave={(e) => handleDrag(e, 'file')}
-            onDragOver={(e) => handleDrag(e, 'file')}
-            onDrop={(e) => handleDrop(e, 'file')}
+            onDragEnter={e => handleDrag(e, 'file')}
+            onDragLeave={e => handleDrag(e, 'file')}
+            onDragOver={e => handleDrag(e, 'file')}
+            onDrop={e => handleDrop(e, 'file')}
           >
             {file ? (
               <div className="space-y-3">
                 <div className="flex items-center justify-center space-x-3">
                   <File className="w-8 h-8 text-blue-500" />
-                  <span className="text-gray-900 dark:text-white font-medium">{file.name}</span>
+                  <span className="text-gray-900 dark:text-white font-medium">
+                    {file.name}
+                  </span>
                   <button
                     type="button"
                     onClick={() => removeFile('file')}
@@ -373,23 +422,27 @@ const Upload = () => {
                     <span className="text-blue-600 hover:text-blue-500 font-medium">
                       Click to upload
                     </span>
-                    <span className="text-gray-500 dark:text-gray-400"> or drag and drop</span>
+                    <span className="text-gray-500 dark:text-gray-400">
+                      {' '}
+                      or drag and drop
+                    </span>
                   </label>
                   <input
                     id="file-upload"
                     name="file-upload"
                     type="file"
                     accept=".obj,.fbx,.dae,.blend,.3ds,.max,.c4d,.ma,.mb,.lwo,.lws,.ply,.stl,.wrl,.x3d"
-                    onChange={(e) => handleFileSelect(e, 'file')}
+                    onChange={e => handleFileSelect(e, 'file')}
                     className="sr-only"
                   />
                 </div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                  OBJ, FBX, DAE, BLEND, 3DS, MAX, C4D, MA, MB, LWO, LWS, PLY, STL, WRL, X3D up to 100MB
+                  OBJ, FBX, DAE, BLEND, 3DS, MAX, C4D, MA, MB, LWO, LWS, PLY,
+                  STL, WRL, X3D up to 100MB
                 </p>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Thumbnail Upload */}
@@ -397,23 +450,25 @@ const Upload = () => {
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
             Thumbnail Image *
           </h2>
-          
+
           <div
             className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
               dragActive.thumbnail
                 ? 'border-green-400 bg-green-50 dark:bg-green-900/20 scale-105'
                 : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
             }`}
-            onDragEnter={(e) => handleDrag(e, 'thumbnail')}
-            onDragLeave={(e) => handleDrag(e, 'thumbnail')}
-            onDragOver={(e) => handleDrag(e, 'thumbnail')}
-            onDrop={(e) => handleDrop(e, 'thumbnail')}
+            onDragEnter={e => handleDrag(e, 'thumbnail')}
+            onDragLeave={e => handleDrag(e, 'thumbnail')}
+            onDragOver={e => handleDrag(e, 'thumbnail')}
+            onDrop={e => handleDrop(e, 'thumbnail')}
           >
             {thumbnail ? (
               <div className="space-y-3">
                 <div className="flex items-center justify-center space-x-3">
                   <Image className="w-8 h-8 text-green-500" />
-                  <span className="text-gray-900 dark:text-white font-medium">{thumbnail.name}</span>
+                  <span className="text-gray-900 dark:text-white font-medium">
+                    {thumbnail.name}
+                  </span>
                   <button
                     type="button"
                     onClick={() => removeFile('thumbnail')}
@@ -427,7 +482,9 @@ const Upload = () => {
                 </div>
                 <div className="flex items-center justify-center text-green-600 dark:text-green-400">
                   <CheckCircle className="w-5 h-5 mr-2" />
-                  <span className="text-sm font-medium">Thumbnail selected</span>
+                  <span className="text-sm font-medium">
+                    Thumbnail selected
+                  </span>
                 </div>
               </div>
             ) : (
@@ -438,14 +495,17 @@ const Upload = () => {
                     <span className="text-green-600 hover:text-green-500 font-medium">
                       Click to upload
                     </span>
-                    <span className="text-gray-500 dark:text-gray-400"> or drag and drop</span>
+                    <span className="text-gray-500 dark:text-gray-400">
+                      {' '}
+                      or drag and drop
+                    </span>
                   </label>
                   <input
                     id="thumbnail-upload"
                     name="thumbnail-upload"
                     type="file"
                     accept="image/*"
-                    onChange={(e) => handleFileSelect(e, 'thumbnail')}
+                    onChange={e => handleFileSelect(e, 'thumbnail')}
                     className="sr-only"
                   />
                 </div>
@@ -465,14 +525,14 @@ const Upload = () => {
             </h3>
             <div className="space-y-3">
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                <div 
+                <div
                   className="bg-blue-600 h-3 rounded-full transition-all duration-300 ease-out"
-                style={{ width: `${uploadProgress}%` }}
-              ></div>
-            </div>
+                  style={{ width: `${uploadProgress}%` }}
+                ></div>
+              </div>
               <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
                 {uploadProgress}% Complete
-            </p>
+              </p>
             </div>
           </div>
         )}
@@ -489,7 +549,7 @@ const Upload = () => {
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Upload
+export default Upload;

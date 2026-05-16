@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { firebaseHelpers } from '../lib/firebase'
-import { 
-  Search, 
-  Filter, 
-  Grid3X3, 
-  List, 
+import React, { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { firebaseHelpers } from '../lib/firebase';
+import {
+  Search,
+  Filter,
+  Grid3X3,
+  List,
   SlidersHorizontal,
   Download,
   Eye,
@@ -13,23 +13,22 @@ import {
   Star,
   TrendingUp,
   Clock,
-  Zap
-} from 'lucide-react'
-import ModelCard from '../components/ModelCard'
-import LoadingSpinner from '../components/ui/LoadingSpinner'
-import EmptyState from '../components/ui/EmptyState'
-import SearchBar from '../components/ui/SearchBar'
+  Zap,
+} from 'lucide-react';
+import ModelCard from '../components/ModelCard';
+import LoadingSpinner from '../components/ui/LoadingSpinner';
+import EmptyState from '../components/ui/EmptyState';
+import SearchBar from '../components/ui/SearchBar';
 
 const Explore = () => {
-  const [models, setModels] = useState([])
-  const [filteredModels, setFilteredModels] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('all')
-  const [sortBy, setSortBy] = useState('newest')
-  const [viewMode, setViewMode] = useState('grid')
-  const [showFilters, setShowFilters] = useState(false)
+  const [models, setModels] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [sortBy, setSortBy] = useState('newest');
+  const [viewMode, setViewMode] = useState('grid');
+  const [showFilters, setShowFilters] = useState(false);
 
   const categories = [
     { id: 'all', name: 'All Categories', icon: Grid3X3 },
@@ -39,92 +38,100 @@ const Explore = () => {
     { id: 'props', name: 'Props', icon: Grid3X3 },
     { id: 'landscapes', name: 'Landscapes', icon: TrendingUp },
     { id: 'furniture', name: 'Furniture', icon: Grid3X3 },
-    { id: 'weapons', name: 'Weapons', icon: Zap }
-  ]
+    { id: 'weapons', name: 'Weapons', icon: Zap },
+  ];
 
   const sortOptions = [
     { id: 'newest', name: 'Newest First', icon: Clock },
     { id: 'popular', name: 'Most Popular', icon: TrendingUp },
     { id: 'downloads', name: 'Most Downloaded', icon: Download },
-    { id: 'views', name: 'Most Viewed', icon: Eye }
-  ]
+    { id: 'views', name: 'Most Viewed', icon: Eye },
+  ];
 
   useEffect(() => {
     const fetchModels = async () => {
       try {
-        setLoading(true)
-        const { models: allModels, error } = await firebaseHelpers.getModels(50)
+        setLoading(true);
+        const { models: allModels, error } =
+          await firebaseHelpers.getModels(50);
         if (error) {
-          setError(error)
+          setError(error);
         } else {
-          setModels(allModels)
-          setFilteredModels(allModels)
+          setModels(allModels);
         }
       } catch (err) {
-        setError('Failed to load models')
-        console.error('Error:', err)
+        setError('Failed to load models');
+        console.error('Error:', err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchModels()
-  }, [])
+    fetchModels();
+  }, []);
 
-  useEffect(() => {
-    let filtered = [...models]
+  // ⚡ Bolt Optimization: Replaced useEffect with useMemo for derived state.
+  // This eliminates an unnecessary render cycle when filters change,
+  // and caches the result of the filtering/sorting operations.
+  const filteredModels = useMemo(() => {
+    let filtered = [...models];
 
     // Apply search filter
     if (searchQuery) {
-      filtered = filtered.filter(model => 
-        model.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        model.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        model.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-      )
+      filtered = filtered.filter(
+        model =>
+          model.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          model.description
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          model.tags?.some(tag =>
+            tag.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+      );
     }
 
     // Apply category filter
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(model => model.category === selectedCategory)
+      filtered = filtered.filter(model => model.category === selectedCategory);
     }
 
     // Apply sorting
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'newest':
-          return new Date(b.created_at) - new Date(a.created_at)
+          return new Date(b.created_at) - new Date(a.created_at);
         case 'popular':
-          return (b.downloads_count || 0) - (a.downloads_count || 0)
+          return (b.downloads_count || 0) - (a.downloads_count || 0);
         case 'downloads':
-          return (b.downloads_count || 0) - (a.downloads_count || 0)
+          return (b.downloads_count || 0) - (a.downloads_count || 0);
         case 'views':
-          return (b.view_count || 0) - (a.view_count || 0)
+          return (b.view_count || 0) - (a.view_count || 0);
         default:
-          return 0
+          return 0;
       }
-    })
+    });
 
-    setFilteredModels(filtered)
-  }, [models, searchQuery, selectedCategory, sortBy])
+    return filtered;
+  }, [models, searchQuery, selectedCategory, sortBy]);
 
-  const handleSearch = (query) => {
-    setSearchQuery(query)
-  }
+  const handleSearch = query => {
+    setSearchQuery(query);
+  };
 
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category)
-  }
+  const handleCategoryChange = category => {
+    setSelectedCategory(category);
+  };
 
-  const handleSortChange = (sort) => {
-    setSortBy(sort)
-  }
+  const handleSortChange = sort => {
+    setSortBy(sort);
+  };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner size="lg" text="Discovering amazing 3D models..." />
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -138,7 +145,7 @@ const Explore = () => {
           actionOnClick={() => window.location.reload()}
         />
       </div>
-    )
+    );
   }
 
   return (
@@ -148,10 +155,11 @@ const Explore = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-        Explore 3D Models
-      </h1>
+              Explore 3D Models
+            </h1>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Discover thousands of amazing 3D models from talented creators around the world
+              Discover thousands of amazing 3D models from talented creators
+              around the world
             </p>
           </div>
 
@@ -170,25 +178,42 @@ const Explore = () => {
               <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                 {models.length}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Total Models</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Total Models
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {models.reduce((sum, model) => sum + (model.downloads_count || 0), 0)}
+                {models.reduce(
+                  (sum, model) => sum + (model.downloads_count || 0),
+                  0
+                )}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Total Downloads</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Total Downloads
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {models.reduce((sum, model) => sum + (model.view_count || 0), 0)}
+                {models.reduce(
+                  (sum, model) => sum + (model.view_count || 0),
+                  0
+                )}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Total Views</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Total Views
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-                {new Set(models.map(m => m.creator?.username).filter(Boolean)).size}
+                {
+                  new Set(models.map(m => m.creator?.username).filter(Boolean))
+                    .size
+                }
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Active Creators</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Active Creators
+              </div>
             </div>
           </div>
         </div>
@@ -200,7 +225,7 @@ const Explore = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
             {/* Categories */}
             <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
+              {categories.map(category => (
                 <button
                   key={category.id}
                   onClick={() => handleCategoryChange(category.id)}
@@ -222,10 +247,10 @@ const Explore = () => {
               <div className="relative">
                 <select
                   value={sortBy}
-                  onChange={(e) => handleSortChange(e.target.value)}
+                  onChange={e => handleSortChange(e.target.value)}
                   className="appearance-none bg-gray-100 dark:bg-gray-700 border-0 rounded-lg px-4 py-2 pr-8 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  {sortOptions.map((option) => (
+                  {sortOptions.map(option => (
                     <option key={option.id} value={option.id}>
                       {option.name}
                     </option>
@@ -281,23 +306,25 @@ const Explore = () => {
             icon={Search}
             title="No models found"
             description={
-              searchQuery 
+              searchQuery
                 ? `No models match your search for "${searchQuery}". Try different keywords or browse all categories.`
-                : "No models available in this category. Check back later or try a different category."
+                : 'No models available in this category. Check back later or try a different category.'
             }
             actionText="Browse All Models"
             actionOnClick={() => {
-              setSearchQuery('')
-              setSelectedCategory('all')
+              setSearchQuery('');
+              setSelectedCategory('all');
             }}
           />
         ) : (
-          <div className={
-            viewMode === 'grid'
-              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
-              : 'space-y-4'
-          }>
-            {filteredModels.map((model) => (
+          <div
+            className={
+              viewMode === 'grid'
+                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
+                : 'space-y-4'
+            }
+          >
+            {filteredModels.map(model => (
               <ModelCard key={model.id} model={model} />
             ))}
           </div>
@@ -313,7 +340,7 @@ const Explore = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Explore
+export default Explore;
