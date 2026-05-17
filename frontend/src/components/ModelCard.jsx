@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { Download, Eye, Calendar, User, Tag } from 'lucide-react'
 
@@ -103,4 +103,8 @@ const ModelCard = ({ model }) => {
   )
 }
 
-export default ModelCard
+// ⚡ Bolt Performance Optimization:
+// Wrapped ModelCard in React.memo() to prevent unnecessary re-renders of the component
+// when parent components (like Explore.jsx) update their state (e.g. view mode, search, filter).
+// This reduces CPU cycles and makes the UI more responsive when dealing with large lists of models.
+export default memo(ModelCard)
