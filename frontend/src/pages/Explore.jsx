@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { firebaseHelpers } from '../lib/firebase'
 import { 
@@ -22,7 +22,6 @@ import SearchBar from '../components/ui/SearchBar'
 
 const Explore = () => {
   const [models, setModels] = useState([])
-  const [filteredModels, setFilteredModels] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
@@ -58,7 +57,6 @@ const Explore = () => {
           setError(error)
         } else {
           setModels(allModels)
-          setFilteredModels(allModels)
         }
       } catch (err) {
         setError('Failed to load models')
@@ -71,15 +69,16 @@ const Explore = () => {
     fetchModels()
   }, [])
 
-  useEffect(() => {
+  const filteredModels = useMemo(() => {
     let filtered = [...models]
 
     // Apply search filter
     if (searchQuery) {
+      const lowerQuery = searchQuery.toLowerCase()
       filtered = filtered.filter(model => 
-        model.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        model.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        model.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        model.title?.toLowerCase().includes(lowerQuery) ||
+        model.description?.toLowerCase().includes(lowerQuery) ||
+        model.tags?.some(tag => tag.toLowerCase().includes(lowerQuery))
       )
     }
 
@@ -104,7 +103,7 @@ const Explore = () => {
       }
     })
 
-    setFilteredModels(filtered)
+    return filtered
   }, [models, searchQuery, selectedCategory, sortBy])
 
   const handleSearch = (query) => {
