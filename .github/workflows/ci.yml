@@ -49,6 +49,8 @@ jobs:
     - name: Deploy to Vercel (Production)
       if: github.ref == 'refs/heads/main'
       uses: amondnet/vercel-action@v25
+      env:
+        ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
@@ -58,6 +60,8 @@ jobs:
     - name: Deploy to Vercel (Preview)
       if: github.ref != 'refs/heads/main'
       uses: amondnet/vercel-action@v25
+      env:
+        ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
@@ -132,6 +136,7 @@ jobs:
     - name: Check for secrets
       uses: gitleaks/gitleaks-action@v2
       env:
+        ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Run dependency check
