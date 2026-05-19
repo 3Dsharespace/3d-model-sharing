@@ -29,6 +29,7 @@ const ModelCard = ({ model }) => {
             <img
               src={model.thumbnail_path}
               alt={model.title}
+              loading="lazy"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
@@ -103,4 +104,6 @@ const ModelCard = ({ model }) => {
   )
 }
 
-export default ModelCard
+// Optimization: Prevent unnecessary re-renders of ModelCard in lists
+// (e.g., in Explore.jsx or Home.jsx) when parent state changes.
+export default React.memo(ModelCard)
