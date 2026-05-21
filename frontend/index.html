@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>3D ShareSpace - Free 3D Model Sharing Platform</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="3DShareSpace is the world's premier free platform for sharing, discovering, and downloading 3D models. Join thousands of creators in our global 3D community." />
+    <meta name="keywords" content="3D models, 3D sharing, free 3D assets, 3D community, 3D creators, 3D platform, 3D downloads, 3D modeling, 3D design" />
+    <meta name="author" content="3DShareSpace" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="google-adsense-account" content="ca-pub-1908204778515307" />
+    <script>
+      (function () {
+        var isLocal = ['localhost', '127.0.0.1'].indexOf(window.location.hostname) !== -1;
+        var debugEnabled = window.location.search.indexOf('debug=true') !== -1;
+
+        if (!isLocal && !debugEnabled) {
+          window.__3DSS_PRODUCTION_CONSOLE__ = true;
+          console.debug = function () {};
+          console.info = function () {};
+          console.log = function () {};
+        }
+      })();
+    </script>
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://3dsharespace.com/" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://3dsharespace.com/" />
+    <meta property="og:title" content="3DShareSpace - Free 3D Model Sharing Platform" />
+    <meta property="og:description" content="Share and discover amazing 3D models with the community. Join thousands of creators in our global 3D community." />
+    <meta property="og:image" content="https://3dsharespace.com/favicon.svg" />
+    <meta property="og:site_name" content="3DShareSpace" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@3dsharespace" />
+    <meta name="twitter:title" content="3DShareSpace - Free 3D Model Sharing Platform" />
+    <meta name="twitter:description" content="Share and discover amazing 3D models with the community. Join thousands of creators in our global 3D community." />
+    <meta name="twitter:image" content="https://3dsharespace.com/favicon.svg" />
+    
+    <!-- Page metadata -->
+    <meta name="application-name" content="3DShareSpace" />
+    <meta name="apple-mobile-web-app-title" content="3DShareSpace" />
+    <meta name="msapplication-TileColor" content="#3b82f6" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    
+    <!-- Structured Data for Organization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "3DShareSpace",
+        "url": "https://3dsharespace.com",
+        "logo": "https://3dsharespace.com/favicon.svg",
+        "description": "Free 3D model sharing platform for creators worldwide",
+        "sameAs": [
+          "https://twitter.com/3dsharespace",
+          "https://facebook.com/3dsharespace"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "email": "support@3dsharespace.com",
+          "contactType": "customer service"
+        }
+      }
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1908204778515307" crossorigin="anonymous"></script>
+
+           <!-- AdSense Auto Ads -->
+           <script>
+             // Prevent duplicate AdSense initialization
+             if (!window.adsenseInitialized) {
+               window.adsenseInitialized = true;
+               
+               // Wait for AdSense script to load
+               function initializeAdSense() {
+                 if (window.adsbygoogle && window.adsbygoogle.loaded) {
+                   try {
+                     // Check if page level ads are already enabled
+                     if (!window.adsensePageLevelEnabled && !window.adsenseInitialized) {
+                       window.adsensePageLevelEnabled = true;
+                       window.adsenseInitialized = true;
+                       
+                       // Check if current page should show ads
+                       const currentPath = window.location.pathname;
+                       const adminPaths = ['/admin', '/admin-dashboard', '/admin-reports', '/admin-cleanup'];
+                       const minimalContentPaths = ['/admin-reports', '/admin-cleanup'];
+                       
+                       // Skip ads on admin pages and minimal content pages
+                       const shouldShowAds = !adminPaths.some(path => currentPath.startsWith(path)) && 
+                                           !minimalContentPaths.some(path => currentPath.startsWith(path));
+                       
+                       if (shouldShowAds) {
+                         (adsbygoogle = window.adsbygoogle || []).push({
+                           google_ad_client: "ca-pub-1908204778515307",
+                           enable_page_level_ads: true
+                         });
+                         console.log('✅ AdSense initialized successfully for:', currentPath);
+                       } else {
+                         console.log('🚫 AdSense disabled for admin/minimal content page:', currentPath);
+                       }
+                     }
+                   } catch (error) {
+                     console.log('⚠️ AdSense initialization error:', error);
+                   }
+                 } else {
+                   // Retry after a short delay
+                   setTimeout(initializeAdSense, 200);
+                 }
+               }
+               
+               // Initialize when DOM is ready
+               if (document.readyState === 'loading') {
+                 document.addEventListener('DOMContentLoaded', initializeAdSense);
+               } else {
+                 initializeAdSense();
+               }
+             }
+           </script>
+
+    <!-- AdSense Auto Ads Guard -->
+    <script>
+      (function () {
+        var publisherId = 'ca-pub-1908204778515307';
+        var excludedPrefixes = [
+          '/admin',
+          '/login',
+          '/signup',
+          '/forgot-password',
+          '/upload',
+          '/dashboard',
+          '/profile/edit',
+          '/notifications',
+          '/settings',
+          '/privacy',
+          '/terms',
+          '/contact',
+          '/report'
+        ];
+
+        function shouldShowAds() {
+          var path = window.location.pathname;
+          return !excludedPrefixes.some(function (prefix) {
+            return path === prefix || path.indexOf(prefix + '/') === 0;
+          });
+        }
+
+        function initializeAdSense() {
+          if (!shouldShowAds() || window.adsenseAutoAdsEnabled) return;
+          if (!window.adsbygoogle) {
+            window.setTimeout(initializeAdSense, 250);
+            return;
+          }
+
+          try {
+            window.adsbygoogle = window.adsbygoogle || [];
+            window.adsbygoogle.push({
+              google_ad_client: publisherId,
+              enable_page_level_ads: true
+            });
+            window.adsenseAutoAdsEnabled = true;
+          } catch (error) {
+            window.setTimeout(initializeAdSense, 500);
+          }
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initializeAdSense);
+        } else {
+          initializeAdSense();
+        }
+      })();
+    </script>
+    
+
+    
+    <!-- Performance Optimization Meta Tags -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="theme-color" content="#3b82f6" />
+    <meta name="color-scheme" content="light dark" />
+    
+    <!-- DNS Prefetch for External Domains -->
+    <link rel="dns-prefetch" href="//firebasestorage.googleapis.com" />
+    <link rel="dns-prefetch" href="//firestore.googleapis.com" />
+    <link rel="dns-prefetch" href="//identitytoolkit.googleapis.com" />
+    <link rel="dns-prefetch" href="//pagead2.googlesyndication.com" />
+    <link rel="dns-prefetch" href="//googleads.g.doubleclick.net" />
+    
+    <!-- Preconnect to Critical Domains -->
+    <link rel="preconnect" href="https://firebasestorage.googleapis.com" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin="anonymous" />
+    
+    <!-- Critical CSS Inline for Above-the-Fold Content -->
+    <style id="critical-css">
+      /* Critical CSS for 3D Model Sharing App - Above the Fold */
+      
+      /* Reset and Base Styles */
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      
+      /* Critical Layout - full width on desktop */
+      .container, .max-w-7xl { max-width: 100%; margin: 0 auto; }
+      
+      /* Critical Header */
+      .header, .navbar, .nav, .logo, .search-bar {
+        display: block;
+        visibility: visible;
+      }
+      
+      /* Quick Access Menu */
+      .quick-access-menu {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      /* Critical Buttons */
+      .btn-primary, .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-weight: 500;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+      }
+      
+      /* Loading States */
+      .loading-spinner {
+        display: inline-block;
+        border: 2px solid #f3f4f6;
+        border-top: 2px solid #3b82f6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Critical Typography */
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;
+        line-height: 1.25;
+        margin: 0;
+      }
+      
+      /* Critical Colors */
+      .text-primary { color: #3b82f6; }
+      .text-secondary { color: #6b7280; }
+      .bg-primary { background-color: #3b82f6; }
+      .bg-secondary { background-color: #f3f4f6; }
+      
+      /* Dark Mode Support */
+      @media (prefers-color-scheme: dark) {
+        body { background-color: #111827; color: #f9fafb; }
+        .bg-secondary { background-color: #1f2937; }
+        .text-secondary { color: #9ca3af; }
+      }
+      
+      /* Performance Loading States */
+      .css-loading { opacity: 0; transition: opacity 0.3s ease-in-out; }
+      .css-loaded { opacity: 1; }
+      
+      /* Critical Grid Layout */
+      .grid { display: grid; }
+      .flex { display: flex; }
+      .items-center { align-items: center; }
+      .justify-center { justify-content: center; }
+      .min-h-screen { min-height: 100vh; }
+      
+      /* Critical Spacing */
+      .p-4 { padding: 1rem; }
+      .px-4 { padding-left: 1rem; padding-right: 1rem; }
+      .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+      .mb-6 { margin-bottom: 1.5rem; }
+      .gap-4 { gap: 1rem; }
+      
+      /* Critical Shadows and Borders */
+      .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+      .border { border: 1px solid #e5e7eb; }
+      .rounded-lg { border-radius: 0.5rem; }
+      
+      /* Critical Transitions */
+      .transition { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+      .hover\:shadow-md:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+    </style>
+    
+    <title>3D Share Space - Share Amazing 3D Models</title>
+    <!-- OpenGraph -->
+    <meta property="og:title" content="3D ShareSpace - Free 3D Model Sharing Platform" />
+    <meta property="og:description" content="Upload, share, and discover amazing 3D models. Join the global community of creators." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://3dsharespace.com/" />
+    <meta property="og:image" content="https://3dsharespace.com/favicon.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="3D ShareSpace - Free 3D Model Sharing Platform" />
+    <meta name="twitter:description" content="Upload, share, and discover amazing 3D models. Join the global community of creators." />
+    <meta name="twitter:image" content="https://3dsharespace.com/favicon.svg" />
+    
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "3D ShareSpace",
+      "url": "https://3dsharespace.com/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://3dsharespace.com/explore?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    
+
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Enhanced Error Handling for Blocked Resources -->
+    <script>
+      // Handle blocked resources gracefully
+      window.addEventListener('error', function(e) {
+        if (e.message && e.message.includes('ERR_BLOCKED_BY_CLIENT')) {
+          console.log('🛡️ Resource blocked by ad blocker - continuing normally');
+          e.preventDefault();
+          return false;
+        }
+      });
+      
+      // Handle Firebase App Check errors
+      window.addEventListener('unhandledrejection', function(e) {
+        if (e.reason && e.reason.message) {
+          const message = e.reason.message.toLowerCase();
+          
+          if (message.includes('appcheck') || message.includes('recaptcha')) {
+            console.log('🔥 Firebase App Check error handled gracefully');
+            e.preventDefault();
+            return;
+          }
+          
+          if (message.includes('network') || message.includes('fetch')) {
+            console.log('🌐 Network error handled gracefully');
+            e.preventDefault();
+            return;
+          }
+        }
+      });
+      
+      // COMPREHENSIVE Google Analytics Blocking
+      if (typeof window !== 'undefined') {
+        // Block ALL Google Analytics requests
+        const originalFetch = window.fetch;
+        window.fetch = function(url, options) {
+          if (typeof url === 'string' && (
+            url.includes('google-analytics.com') ||
+            url.includes('googletagmanager.com') ||
+            url.includes('G-DVE3KJ3EWJ')
+          )) {
+            console.log('🛡️ Blocked Google Analytics fetch request:', url);
+            return Promise.resolve(new Response('', { status: 200 }));
+          }
+          return originalFetch.apply(this, arguments);
+        };
+        
+        // Block XMLHttpRequest
+        const originalXHROpen = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function(method, url, ...args) {
+          if (typeof url === 'string' && (
+            url.includes('google-analytics.com') ||
+            url.includes('googletagmanager.com') ||
+            url.includes('G-DVE3KJ3EWJ')
+          )) {
+            console.log('🛡️ Blocked Google Analytics XHR request:', url);
+            this._blocked = true;
+            return;
+          }
+          return originalXHROpen.apply(this, [method, url, ...args]);
+        };
+        
+        const originalXHRSend = XMLHttpRequest.prototype.send;
+        XMLHttpRequest.prototype.send = function(...args) {
+          if (this._blocked) {
+            console.log('🛡️ Blocked Google Analytics XHR send');
+            return;
+          }
+          return originalXHRSend.apply(this, args);
+        };
+        
+        // Override gtag completely
+        window.gtag = function() {
+          console.log('📊 Google Analytics blocked - continuing without tracking');
+        };
+        
+        // Block any script loading with old GA ID
+        const originalCreateElement = document.createElement;
+        document.createElement = function(tagName) {
+          const element = originalCreateElement.call(this, tagName);
+          
+          if (tagName.toLowerCase() === 'script') {
+            const originalSetAttribute = element.setAttribute;
+            element.setAttribute = function(name, value) {
+              if (name === 'src' && value && typeof value === 'string') {
+                // Block any script with old GA ID
+                if (value.includes('G-DVE3KJ3EWJ') || 
+                    value.includes('google-analytics.com') ||
+                    value.includes('googletagmanager.com')) {
+                  console.log('🛡️ Blocked Google Analytics script:', value);
+                  return; // Don't set the src
+                }
+              }
+              return originalSetAttribute.call(this, name, value);
+            };
+          }
+          
+          return element;
+        };
+        
+        // Block inspector.js Google Analytics calls
+        if (window.inspector) {
+          const originalInspectorFetch = window.inspector.fetch;
+          if (originalInspectorFetch) {
+            window.inspector.fetch = function(url, options) {
+              if (typeof url === 'string' && url.includes('google-analytics.com')) {
+                console.log('🛡️ Blocked inspector.js Google Analytics request:', url);
+                return Promise.resolve(new Response('', { status: 200 }));
+              }
+              return originalInspectorFetch.apply(this, arguments);
+            };
+          }
+        }
+      }
+      
+      // Handle Firebase logging blocking
+      if (typeof window !== 'undefined' && window.firebase) {
+        const originalLog = window.firebase.log || console.log;
+        window.firebase.log = function(...args) {
+          try {
+            originalLog.apply(this, args);
+          } catch (e) {
+            if (e.message && e.message.includes('ERR_BLOCKED_BY_CLIENT')) {
+              console.log('🔥 Firebase logging blocked - continuing without logs');
+            }
+          }
+        };
+      }
+    </script>
+  </body>
+</html>

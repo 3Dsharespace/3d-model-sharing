@@ -1,0 +1,13 @@
+{
+  "name": "3dsharespace-upload-assist-functions",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "engines": {
+    "node": "20"
+  },
+  "dependencies": {
+    "3dwebsite": "file:..",
+    "firebase-functions": "^6.4.0"
+  }
+}

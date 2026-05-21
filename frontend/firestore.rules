@@ -1,0 +1,560 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // =====================================
+    // HELPER FUNCTIONS
+    // =====================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'super_admin' ||
+              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true);
+    }
+    
+    // =====================================
+    // USER PROFILES (UPDATED FOR EXISTING USERS COLLECTION)
+    // =====================================
+    
+    match /users/{userId} {
+      // Anyone can read public user data
+      allow read: if true;
+      
+      // Users can create their own profile
+      allow create: if isAuthenticated() && 
+                       request.auth.uid == userId &&
+                       isValidUserData();
+      
+      // Users can update their own profile; admins can manage account status and roles.
+      allow update: if (isOwner(userId) && isValidUserUpdate()) ||
+                       (isAdmin() && isValidAdminUserUpdate());
+      
+      // Only admins can delete users
+      allow delete: if isAdmin();
+      
+      function isValidUserData() {
+        return 'uid' in request.resource.data &&
+               'displayName' in request.resource.data &&
+               'createdAt' in request.resource.data &&
+               request.resource.data.uid is string &&
+               request.resource.data.displayName is string;
+      }
+      
+      function isValidUserUpdate() {
+        // Can't change uid after creation
+        return (!('uid' in request.resource.data) || 
+                request.resource.data.uid == resource.data.uid) &&
+               // Validate all additional fields
+               (!('email' in request.resource.data) || request.resource.data.email is string) &&
+               (!('role' in request.resource.data) || request.resource.data.role == resource.data.role) &&
+               (!('isAdmin' in request.resource.data) || request.resource.data.isAdmin == resource.data.isAdmin) &&
+               (!('permissions' in request.resource.data) || request.resource.data.permissions == resource.data.permissions) &&
+               (!('admin_notes' in request.resource.data) || request.resource.data.admin_notes == resource.data.admin_notes) &&
+               (!('role_updated_by' in request.resource.data) || request.resource.data.role_updated_by == resource.data.role_updated_by) &&
+               (!('role_updated_at' in request.resource.data) || request.resource.data.role_updated_at == resource.data.role_updated_at) &&
+               (!('verified' in request.resource.data) || request.resource.data.verified is bool);
+      }
+
+      function isValidAdminUserUpdate() {
+        return (!('uid' in request.resource.data) || request.resource.data.uid == resource.data.uid) &&
+               (!('email' in request.resource.data) || request.resource.data.email == resource.data.email) &&
+               (!('role' in request.resource.data) || request.resource.data.role in ['user', 'creator', 'admin', 'super_admin']) &&
+               (!('isAdmin' in request.resource.data) || request.resource.data.isAdmin is bool) &&
+               (!('status' in request.resource.data) || request.resource.data.status in ['active', 'inactive', 'banned', 'pending']) &&
+               (!('verified' in request.resource.data) || request.resource.data.verified is bool) &&
+               (!('isVerified' in request.resource.data) || request.resource.data.isVerified is bool);
+      }
+    }
+    
+    // =====================================
+    // PROFILES COLLECTION (FOR BACKWARD COMPATIBILITY)
+    // =====================================
+    
+    match /profiles/{profileId} {
+      // Anyone can read public profiles
+      allow read: if true;
+      
+      // Users can create their own profile
+      allow create: if isAuthenticated() && 
+                       request.auth.uid == profileId &&
+                       isValidProfileData();
+      
+      // Users can update their own profile
+      allow update: if isOwner(profileId) && 
+                       isValidProfileUpdate();
+      
+      // Only admins can delete profiles
+      allow delete: if isAdmin();
+      
+      function isValidProfileData() {
+        return 'username' in request.resource.data &&
+               'email' in request.resource.data &&
+               'created_at' in request.resource.data &&
+               request.resource.data.username is string &&
+               request.resource.data.email is string;
+      }
+      
+      function isValidProfileUpdate() {
+        // Can't change email or username after creation
+        return (!('email' in request.resource.data) || 
+                request.resource.data.email == resource.data.email) &&
+               (!('username' in request.resource.data) || 
+                request.resource.data.username == resource.data.username) &&
+               // Validate all additional fields
+               (!('downloads' in request.resource.data) || request.resource.data.downloads is number) &&
+               (!('verified' in request.resource.data) || request.resource.data.verified is bool) &&
+               (!('paymentLink' in request.resource.data) || request.resource.data.paymentLink is string) &&
+               (!('availableBalance' in request.resource.data) || request.resource.data.availableBalance is number) &&
+               (!('reputationScore' in request.resource.data) || request.resource.data.reputationScore is number) &&
+               (!('reputationTier' in request.resource.data) || request.resource.data.reputationTier is string) &&
+               (!('badges' in request.resource.data) || request.resource.data.badges is list) &&
+               (!('supporterPerks' in request.resource.data) || request.resource.data.supporterPerks is list) &&
+               (!('last_download_increment' in request.resource.data) || request.resource.data.last_download_increment is timestamp) &&
+               (!('verified_at' in request.resource.data) || request.resource.data.verified_at is timestamp) &&
+               // Follow system fields - allow updates for follow/unfollow operations
+               (!('followers_list' in request.resource.data) || request.resource.data.followers_list is list) &&
+               (!('following_list' in request.resource.data) || request.resource.data.following_list is list) &&
+               // Admin fields - only admins can change these
+               (!('role' in request.resource.data) || isAdmin()) &&
+               (!('permissions' in request.resource.data) || isAdmin()) &&
+               (!('admin_notes' in request.resource.data) || isAdmin()) &&
+               (!('role_updated_by' in request.resource.data) || isAdmin()) &&
+               (!('role_updated_at' in request.resource.data) || isAdmin());
+      }
+    }
+    
+    // =====================================
+    // 3D MODELS
+    // =====================================
+    
+    match /models/{modelId} {
+      // Model pages are public. Edits, deletes, and uploads stay protected below.
+      allow read: if true;
+      
+      // Authenticated users can create models
+      allow create: if isAuthenticated() && 
+                       request.auth.uid == request.resource.data.user_id &&
+                       isValidModelData();
+      
+      // Owners and admins can update models, or system can update counters
+      allow update: if ('user_id' in resource.data && isOwner(resource.data.user_id)) ||
+                       ('userId' in resource.data && isOwner(resource.data.userId)) ||
+                       isAdmin() ||
+                       onlyUpdatingCounters();
+      
+      // Only owners and admins can delete models
+      allow delete: if ('user_id' in resource.data && isOwner(resource.data.user_id)) ||
+                       ('userId' in resource.data && isOwner(resource.data.userId)) ||
+                       isAdmin();
+      
+      function isValidModelData() {
+        return 'title' in request.resource.data &&
+               'user_id' in request.resource.data &&
+               'category' in request.resource.data &&
+               'created_at' in request.resource.data &&
+               request.resource.data.title is string &&
+               request.resource.data.category is string;
+      }
+      
+      function onlyUpdatingCounters() {
+        let allowedFields = ['downloads_count', 'likes_count', 'comments_count', 'view_count', 'downloads', 'likes', 'comments', 'views', 'updated_at', 'updatedAt'];
+        let changedKeys = request.resource.data.diff(resource.data).changedKeys();
+        return changedKeys.hasOnly(allowedFields);
+      }
+    }
+    
+    // =====================================
+    // COMMENTS
+    // =====================================
+    
+    match /comments/{commentId} {
+      // Anyone can read comments on public models
+      allow read: if true;
+      
+      // Authenticated users can create comments
+      allow create: if isAuthenticated() && 
+                       request.auth.uid == request.resource.data.user_id &&
+                       isValidCommentData();
+      
+      // Only comment author can update their comments
+      allow update: if isOwner(resource.data.user_id);
+      
+      // Comment author, model owner, or admin can delete comments
+      allow delete: if isOwner(resource.data.user_id) || 
+                       isModelOwner() || 
+                       isAdmin();
+      
+      function isValidCommentData() {
+        return 'content' in request.resource.data &&
+               'user_id' in request.resource.data &&
+               'model_id' in request.resource.data &&
+               'created_at' in request.resource.data &&
+               request.resource.data.content is string &&
+               request.resource.data.content.size() > 0 &&
+               request.resource.data.content.size() <= 1000;
+      }
+      
+      function isModelOwner() {
+        return isAuthenticated() && 
+               exists(/databases/$(database)/documents/models/$(resource.data.model_id)) &&
+               get(/databases/$(database)/documents/models/$(resource.data.model_id)).data.user_id == request.auth.uid;
+      }
+    }
+    
+    // =====================================
+    // LIKES
+    // =====================================
+    
+    match /likes/{likeId} {
+      // Anyone can read likes
+      allow read: if true;
+      
+      // Authenticated users can create likes
+      allow create: if isAuthenticated() &&
+                       (('user_id' in request.resource.data && request.auth.uid == request.resource.data.user_id) ||
+                        ('userId' in request.resource.data && request.auth.uid == request.resource.data.userId)) &&
+                       isValidLikeData();
+      
+      // Only like author can delete their likes
+      allow delete: if ('user_id' in resource.data && isOwner(resource.data.user_id)) ||
+                       ('userId' in resource.data && isOwner(resource.data.userId));
+      
+      function isValidLikeData() {
+        return (('user_id' in request.resource.data || 'userId' in request.resource.data) &&
+               ('model_id' in request.resource.data || 'modelId' in request.resource.data) &&
+               ('created_at' in request.resource.data || 'createdAt' in request.resource.data));
+      }
+    }
+    
+    // =====================================
+    // DOWNLOADS
+    // =====================================
+    
+    match /downloads/{downloadId} {
+      // Users can read their own downloads, model owners can see who downloaded
+      allow read: if isOwner(resource.data.user_id) || 
+                     isOwner(resource.data.creator_id) || 
+                     isAdmin();
+      
+      // Authenticated users can create download records
+      allow create: if isAuthenticated() && 
+                       request.auth.uid == request.resource.data.user_id &&
+                       isValidDownloadData();
+      
+      // No updates or deletes (audit trail)
+      allow update, delete: if false;
+      
+      function isValidDownloadData() {
+        return 'user_id' in request.resource.data &&
+               'model_id' in request.resource.data &&
+               'creator_id' in request.resource.data &&
+               'created_at' in request.resource.data &&
+               // Optional anti-abuse fields
+               (!('verified_download' in request.resource.data) || request.resource.data.verified_download is bool) &&
+               (!('session_id' in request.resource.data) || request.resource.data.session_id is string);
+      }
+    }
+    
+    // =====================================
+    // COLLECTIONS
+    // =====================================
+    
+    match /collections/{collectionId} {
+      // Public collections can be read by anyone, private by owner only
+      allow read: if !('is_public' in resource.data) || 
+                     resource.data.is_public == true || 
+                     ('isPublic' in resource.data && resource.data.isPublic == true) ||
+                     ('user_id' in resource.data && isOwner(resource.data.user_id)) ||
+                     ('userId' in resource.data && isOwner(resource.data.userId)) ||
+                     isAdmin();
+      
+      // Authenticated users can create collections
+      allow create: if isAuthenticated() &&
+                       (('user_id' in request.resource.data && request.auth.uid == request.resource.data.user_id) ||
+                        ('userId' in request.resource.data && request.auth.uid == request.resource.data.userId)) &&
+                       isValidCollectionData();
+      
+      // Only owners can update their collections
+      allow update: if ('user_id' in resource.data && isOwner(resource.data.user_id)) ||
+                       ('userId' in resource.data && isOwner(resource.data.userId));
+      
+      // Only owners and admins can delete collections
+      allow delete: if ('user_id' in resource.data && isOwner(resource.data.user_id)) ||
+                       ('userId' in resource.data && isOwner(resource.data.userId)) ||
+                       isAdmin();
+      
+      function isValidCollectionData() {
+        return 'name' in request.resource.data &&
+               ('user_id' in request.resource.data || 'userId' in request.resource.data) &&
+               ('created_at' in request.resource.data || 'createdAt' in request.resource.data) &&
+               request.resource.data.name is string &&
+               request.resource.data.name.size() > 0;
+      }
+    }
+    
+    // Collection Items
+    match /collection_items/{itemId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.user_id;
+      allow update, delete: if isAuthenticated() && request.auth.uid == resource.data.user_id;
+    }
+    
+    // =====================================
+    // FOLLOWS
+    // =====================================
+    
+    match /follows/{followId} {
+      // Anyone can read follow relationships
+      allow read: if true;
+      
+      // Authenticated users can create follows
+      allow create: if isAuthenticated() && 
+                       request.auth.uid == request.resource.data.follower_id &&
+                       isValidFollowData();
+      
+      // Authenticated users can delete their own follows
+      allow delete: if isAuthenticated() && 
+                       request.auth.uid == resource.data.follower_id;
+      
+      // Allow updates for follow metadata (like timestamps)
+      allow update: if isAuthenticated() && 
+                       request.auth.uid == resource.data.follower_id &&
+                       isValidFollowUpdate();
+      
+      function isValidFollowData() {
+        return 'follower_id' in request.resource.data &&
+               'following_id' in request.resource.data &&
+               'created_at' in request.resource.data &&
+               request.resource.data.follower_id != request.resource.data.following_id &&
+               request.resource.data.follower_id is string &&
+               request.resource.data.following_id is string &&
+               request.resource.data.created_at is timestamp;
+      }
+      
+      function isValidFollowUpdate() {
+        // Only allow updating specific fields, not the core relationship
+        return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['updated_at', 'metadata']);
+      }
+    }
+    
+    // =====================================
+    // TIPS & SUPPORT
+    // =====================================
+    
+    match /tips/{tipId} {
+      // Tip parties can read their tips, admins can read all
+      allow read: if isOwner(resource.data.supporter_id) || 
+                     isOwner(resource.data.creator_id) || 
+                     isAdmin();
+      
+      // Authenticated users can create tips
+      allow create: if isAuthenticated() && 
+                       request.auth.uid == request.resource.data.supporter_id &&
+                       isValidTipData();
+      
+      // No updates or deletes (financial audit trail)
+      allow update, delete: if false;
+      
+      function isValidTipData() {
+        return 'supporter_id' in request.resource.data &&
+               'creator_id' in request.resource.data &&
+               'amount' in request.resource.data &&
+               'created_at' in request.resource.data &&
+               request.resource.data.amount is number &&
+               request.resource.data.amount > 0 &&
+               request.resource.data.supporter_id != request.resource.data.creator_id;
+      }
+    }
+    
+    // =====================================
+    // NOTIFICATIONS
+    // =====================================
+    
+    match /notifications/{notificationId} {
+      // Users can only read their own notifications
+      allow read: if isOwner(resource.data.user_id) ||
+                    (isAuthenticated() && resource.data.recipientId == request.auth.uid);
+      
+      // System, admins, and signed-in actors can create notifications for user interactions
+      allow create: if isAdmin() || 
+                       isValidSystemNotification() ||
+                       isValidUserInteractionNotification();
+      
+      // Users can update their own notifications (mark as read)
+      allow update: if (isOwner(resource.data.user_id) ||
+                        (isAuthenticated() && resource.data.recipientId == request.auth.uid)) &&
+                       isValidNotificationUpdate();
+      
+      // Users and admins can delete notifications
+      allow delete: if isOwner(resource.data.user_id) ||
+                     (isAuthenticated() && resource.data.recipientId == request.auth.uid) ||
+                     isAdmin();
+      
+      function isValidSystemNotification() {
+        // Allow Cloud Functions to create notifications
+        return request.auth == null;
+      }
+
+      function isValidUserInteractionNotification() {
+        return isAuthenticated() &&
+               'recipientId' in request.resource.data &&
+               request.resource.data.recipientId is string &&
+               request.resource.data.recipientId != request.auth.uid &&
+               (
+                 !('actorId' in request.resource.data) ||
+                 request.resource.data.actorId == request.auth.uid
+               );
+      }
+      
+      function isValidNotificationUpdate() {
+        // Only allow marking as read/unread
+        return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read', 'read_at', 'readAt']);
+      }
+    }
+
+    // =====================================
+    // NOTIFICATION PREFERENCES
+    // =====================================
+
+    match /notification_preferences/{userId} {
+      allow read, create, update: if isOwner(userId);
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+    
+    // =====================================
+    // VERIFICATION REQUESTS
+    // =====================================
+    
+    match /verification_requests/{requestId} {
+      // Users can read their own requests, admins can read all
+      allow read: if isOwner(resource.data.user_id) || isAdmin();
+      
+      // Authenticated users can create verification requests
+      allow create: if isAuthenticated() && 
+                       request.auth.uid == request.resource.data.user_id &&
+                       isValidVerificationRequest();
+      
+      // Only admins can update verification requests
+      allow update: if isAdmin();
+      
+      // Users can delete their pending requests
+      allow delete: if (isOwner(resource.data.user_id) && 
+                       resource.data.status == 'pending') || 
+                       isAdmin();
+      
+      function isValidVerificationRequest() {
+        return 'user_id' in request.resource.data &&
+               'type' in request.resource.data &&
+               'status' in request.resource.data &&
+               'created_at' in request.resource.data &&
+               request.resource.data.status == 'pending';
+      }
+    }
+
+    // =====================================
+    // CONTENT REPORTS / MODERATION
+    // =====================================
+
+    match /reports/{reportId} {
+      allow read: if isAdmin();
+      allow create: if isValidReportData();
+      allow update, delete: if isAdmin();
+
+      function isValidReportData() {
+        return 'type' in request.resource.data &&
+               'email' in request.resource.data &&
+               'details' in request.resource.data &&
+               'status' in request.resource.data &&
+               'createdAt' in request.resource.data &&
+               request.resource.data.type in ['ip_infringement', 'inappropriate', 'other'] &&
+               request.resource.data.email is string &&
+               request.resource.data.email.size() >= 5 &&
+               request.resource.data.email.size() <= 200 &&
+               request.resource.data.details is string &&
+               request.resource.data.details.size() >= 10 &&
+               request.resource.data.details.size() <= 4000 &&
+               request.resource.data.status == 'pending' &&
+               (!('modelId' in request.resource.data) || request.resource.data.modelId is string) &&
+               (!('url' in request.resource.data) || request.resource.data.url is string) &&
+               (!('priority' in request.resource.data) || request.resource.data.priority in ['low', 'medium', 'high']);
+      }
+    }
+    
+    // =====================================
+    // LEGACY & COMPATIBILITY
+    // =====================================
+    
+    // Views - anyone can read and create (allows anonymous view tracking)
+    match /views/{viewId} {
+      allow read, create: if true;
+    }
+    
+    // Analytics Events - authenticated users can create, admins can read
+    match /analytics_events/{eventId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+    }
+    
+    // Activities - users can read their own activities and create activities
+    match /activities/{activityId} {
+      allow read: if isAuthenticated() && 
+        (request.auth.uid == resource.data.actor_id || 
+         request.auth.uid == resource.data.target_id);
+      allow create: if isAuthenticated() && 
+        (request.auth.uid == request.resource.data.actor_id ||
+         isValidFollowActivity());
+      
+      function isValidFollowActivity() {
+        // Allow creating follow activities for other users (system operations)
+        return 'type' in request.resource.data &&
+               request.resource.data.type == 'new_follower' &&
+               'actor_id' in request.resource.data &&
+               'target_id' in request.resource.data &&
+               'created_at' in request.resource.data;
+      }
+    }
+    
+    // Purchases - only authenticated users can read their own purchase data
+    match /purchases/{purchaseId} {
+      allow read: if isAuthenticated() && (
+        resource.data.user_id == request.auth.uid || 
+        get(/databases/$(database)/documents/models/$(resource.data.model_id)).data.user_id == request.auth.uid
+      );
+      allow create: if isAuthenticated();
+    }
+    
+    // =====================================
+    // ADMIN COLLECTIONS
+    // =====================================
+    
+    match /admin/{document=**} {
+      // Only admins can access admin collections
+      allow read, write: if isAdmin();
+    }
+    
+    // =====================================
+    // ANALYTICS & LOGS
+    // =====================================
+    
+    match /analytics/{document=**} {
+      // Read-only for authenticated users, write for system
+      allow read: if isAuthenticated();
+      allow write: if false; // Only Cloud Functions can write
+    }
+    
+    match /logs/{document=**} {
+      // Admins only
+      allow read, write: if isAdmin();
+    }
+  }
+}

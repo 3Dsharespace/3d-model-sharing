@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "dsharespace-v2"
+  },
+  "targets": {
+    "dsharespace-v2": {
+      "hosting": {
+        "production": [
+          "3dsharespace-com"
+        ],
+        "default": [
+          "dsharespace-v2"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
