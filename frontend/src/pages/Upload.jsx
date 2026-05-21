@@ -16,7 +16,6 @@ import {
   Save,
   Settings,
   Shield,
-  Sparkles,
   Tag,
   Upload as UploadIcon,
   X
@@ -243,13 +242,13 @@ const Upload = () => {
     { label: 'License selected', done: Boolean(formData.license), points: 10 }
   ]
   const seoScore = seoChecks.reduce((score, item) => score + (item.done ? item.points : 0), 0)
-  const seoScoreLabel = seoScore >= 85 ? 'Excellent' : seoScore >= 65 ? 'Good' : seoScore >= 40 ? 'Needs work' : 'Weak'
+  const listingScoreLabel = seoScore >= 85 ? 'Complete' : seoScore >= 65 ? 'Solid' : seoScore >= 40 ? 'Needs detail' : 'Sparse'
 
   const inputClass =
-    'w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 dark:border-gray-800 dark:bg-black dark:text-white dark:focus:border-white dark:focus:ring-white/10'
-  const labelClass = 'mb-2 block text-sm font-medium text-gray-900 dark:text-white'
-  const helperClass = 'mt-1 text-xs text-gray-500 dark:text-gray-500'
-  const sectionClass = 'rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-black'
+    'studio-input'
+  const labelClass = 'studio-label'
+  const helperClass = 'mt-1 text-xs text-[#737373]'
+  const sectionClass = 'border border-[#242424] bg-[#101010] p-5'
 
   function saveDraft(showMessage = true) {
     if (!user) return
@@ -588,7 +587,7 @@ const Upload = () => {
   if (authLoading || !user) return null
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-950 dark:bg-black dark:text-white">
+    <div className="studio-page">
       <PageMeta
         title="Upload 3D Model - Free | 3D ShareSpace"
         description="Upload your 3D model for free. Share GLB, GLTF, OBJ, FBX, STL, ZIP, and more with the 3D ShareSpace community."
@@ -597,23 +596,23 @@ const Upload = () => {
         type="website"
       />
 
-      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8 flex flex-col gap-4 border-b border-gray-200 pb-6 dark:border-gray-900 lg:flex-row lg:items-end lg:justify-between">
+      <div className="studio-container">
+        <div className="mb-8 flex flex-col gap-4 border-b border-[#242424] pb-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="mb-2 text-sm font-medium uppercase tracking-wider text-gray-500 dark:text-gray-500">
+            <p className="studio-kicker">
               Creator upload
             </p>
-            <h1 className="text-3xl font-semibold tracking-normal text-gray-950 dark:text-white sm:text-4xl">
+            <h1 className="mt-2 text-4xl font-semibold leading-tight text-[#f5f5f5]">
               Upload a 3D model
             </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 dark:text-gray-400">
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-[#a3a3a3]">
               Add the file, give it searchable details, choose how people can use it, then publish.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-500">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-[#737373]">
             {lastSaved && <span>Draft saved {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>}
-            <Button type="button" variant="outline" onClick={() => saveDraft(true)} className="gap-2">
+            <Button type="button" variant="outline" onClick={() => saveDraft(true)} className="gap-2 border-[#242424] bg-[#101010] text-[#f5f5f5] hover:bg-[#141414]">
               <Save className="h-4 w-4" />
               Save Draft
             </Button>
@@ -779,9 +778,9 @@ const Upload = () => {
                   {aiGenerating ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
-                    <Sparkles className="h-4 w-4" />
+                    <Info className="h-4 w-4" />
                   )}
-                  Auto-fill
+                  Suggest details
                 </Button>
               </div>
 
@@ -1026,9 +1025,9 @@ const Upload = () => {
 
               <div className="mt-5 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-950">
                 <div className="flex items-start gap-3">
-                  <Sparkles className="mt-0.5 h-4 w-4 text-gray-500" />
+                  <Info className="mt-0.5 h-4 w-4 text-gray-500" />
                   <div>
-                    <p className="text-sm font-medium text-gray-950 dark:text-white">Auto-fill details</p>
+                    <p className="text-sm font-medium text-gray-950 dark:text-white">Suggest listing details</p>
                     <p className="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-500">
                       Suggests a detailed description, category, tags, and useful listing details for review.
                     </p>
@@ -1065,8 +1064,8 @@ const Upload = () => {
               <div className="mt-5 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-950">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm font-medium text-gray-950 dark:text-white">Google image SEO score</p>
-                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-500">{seoScoreLabel} listing strength</p>
+                    <p className="text-sm font-medium text-gray-950 dark:text-white">Listing strength</p>
+                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-500">{listingScoreLabel} details</p>
                   </div>
                   <div className="text-right">
                     <p className="text-2xl font-bold text-gray-950 dark:text-white">{seoScore}</p>
