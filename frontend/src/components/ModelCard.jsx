@@ -25,7 +25,13 @@ const getCreatorName = (model) => {
   return model?.creator?.username || model?.author?.username || model?.username || model?.creatorName || 'Independent creator'
 }
 
-const ModelCard = ({ model, compact = false }) => {
+/**
+ * ⚡ Bolt Performance Optimization:
+ * Wrapped ModelCard in React.memo to prevent unnecessary re-renders in list views (Explore, Home, Dashboard).
+ * Since the models are usually stable objects in the parent's state, shallow comparison
+ * avoids re-rendering hundreds of cards when the parent component re-renders (e.g. pagination or unrelated state changes).
+ */
+const ModelCard = React.memo(({ model, compact = false }) => {
   const thumbnail = getThumbnail(model)
   const format = getModelFileFormat(model) || model?.fileFormat || model?.format || ''
   const category = model?.category || '3D Model'
@@ -66,6 +72,8 @@ const ModelCard = ({ model, compact = false }) => {
       </div>
     </Link>
   )
-}
+})
+
+ModelCard.displayName = 'ModelCard'
 
 export default ModelCard
