@@ -68,4 +68,7 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+// ⚡ Bolt Performance Optimization:
+// Wrapped in React.memo to prevent unnecessary re-renders when rendering large lists of models
+// (e.g., Explore, Home, Dashboard) where parent state changes but the model prop remains the same.
+export default React.memo(ModelCard)
