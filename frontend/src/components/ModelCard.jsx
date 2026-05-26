@@ -68,4 +68,6 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+// ⚡ Bolt: Memoize the component to prevent unnecessary re-renders in list views
+// Expected impact: Eliminates O(N) re-renders when parent page state updates (e.g. typing in a search box)
+export default React.memo(ModelCard)
