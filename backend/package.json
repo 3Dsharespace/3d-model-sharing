@@ -7,6 +7,7 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "build": "echo 'Backend is ready to run'",
+    "lint": "echo \"No linting configured for backend\"",
     "test": "jest",
     "db:generate": "npx prisma generate",
     "db:push": "npx prisma db push",
