@@ -68,4 +68,6 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+// Optimization: Wrap with React.memo to prevent unnecessary O(N) re-renders
+// when parent search inputs (like in Home/Explore) trigger full page renders
+export default React.memo(ModelCard)
