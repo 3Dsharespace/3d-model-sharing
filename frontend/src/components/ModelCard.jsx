@@ -25,7 +25,11 @@ const getCreatorName = (model) => {
   return model?.creator?.username || model?.author?.username || model?.username || model?.creatorName || 'Independent creator'
 }
 
-const ModelCard = ({ model, compact = false }) => {
+// ⚡ Bolt Optimization:
+// Wrapped ModelCard in React.memo to prevent O(N) re-renders when parent state
+// (like the search query on Home.jsx/Explore.jsx) changes on every keystroke.
+// Expected Impact: Significant reduction in render time and CPU usage when typing in search bars.
+const ModelCard = React.memo(({ model, compact = false }) => {
   const thumbnail = getThumbnail(model)
   const format = getModelFileFormat(model) || model?.fileFormat || model?.format || ''
   const category = model?.category || '3D Model'
@@ -66,6 +70,6 @@ const ModelCard = ({ model, compact = false }) => {
       </div>
     </Link>
   )
-}
+})
 
 export default ModelCard
