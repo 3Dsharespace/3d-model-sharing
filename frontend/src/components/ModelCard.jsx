@@ -68,4 +68,8 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+// ⚡ PERFORMANCE OPTIMIZATION:
+// Wrapped in React.memo to prevent O(N) re-renders when parent components (like Home.jsx or Explore.jsx)
+// re-render frequently, such as on every keystroke in a search input.
+// Impact: Reduces re-renders significantly for list items when search inputs change.
+export default React.memo(ModelCard)
