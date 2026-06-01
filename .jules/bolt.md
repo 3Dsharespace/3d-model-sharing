@@ -1,0 +1,3 @@
+## 2026-06-01 - O(N) re-renders due to search inputs in root components
+**Learning:** The frontend application exhibits an architectural pattern where search inputs in root components (like `Home.jsx` and `Explore.jsx`) trigger full page re-renders on every keystroke. This causes all list item components (like `ModelCard`) to re-render, creating an O(N) rendering performance bottleneck.
+**Action:** Wrap list item components used within these pages (e.g., `ModelCard`) in `React.memo` to prevent unnecessary re-rendering when parent state changes that do not affect the child props.
