@@ -1,0 +1,3 @@
+## 2024-06-02 - Root component state coupling causing O(N) re-renders
+**Learning:** Found a codebase-specific architectural pattern in `frontend/src/pages/Home.jsx` and `frontend/src/pages/Explore.jsx` where search input state (`query` or `searchQuery`) is coupled to the root page component. Because the state updates on every keystroke, the entire page tree re-renders synchronously. This causes severe O(N) re-rendering performance bottlenecks for un-memoized list items (like `ModelCard` components) within these pages.
+**Action:** When working on list items in this codebase, always ensure they are wrapped in `React.memo` to shield them from these parent-level keystroke re-renders.
