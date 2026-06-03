@@ -1,0 +1,3 @@
+## 2024-12-08 - Unnecessary re-renders on search input
+**Learning:** In root components like `Home.jsx` and `Explore.jsx`, search inputs cause full page re-renders on every keystroke. For pages displaying lists of components (like `ModelCard`), this results in an O(N) re-rendering performance bottleneck since each item in the list is unnecessarily re-rendered when the search input changes, even if the search results haven't updated yet or if the input is handled locally before fetching.
+**Action:** Always wrap list item components (like `ModelCard`) in `React.memo` to prevent these unnecessary re-renders during state updates in their parent components, especially when dealing with search inputs or other frequent state changes at the root level.
