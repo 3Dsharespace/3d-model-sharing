@@ -1,0 +1,3 @@
+[submodule "3dwebsite"]
+	path = 3dwebsite
+	url = https://github.com/3Dsharespace/3d-model-sharing.git
