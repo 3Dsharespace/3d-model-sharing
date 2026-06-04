@@ -1,0 +1,3 @@
+## 2024-05-24 - React.memo Optimization for Search Inputs in Lists
+**Learning:** The frontend architecture has search inputs in root components (`Home.jsx` and `Explore.jsx`) that trigger full page re-renders on every keystroke. Without memoization on list items, this results in O(N) rendering performance bottlenecks where all `ModelCard` components needlessly re-render during typing.
+**Action:** Always wrap list item components (e.g., `ModelCard`) in `React.memo` to prevent O(N) re-rendering performance bottlenecks, especially when the parent component manages rapid state changes like search inputs.
