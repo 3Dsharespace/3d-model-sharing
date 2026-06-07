@@ -201,15 +201,11 @@ async function handleStaticRequest(request) {
     return cachedResponse
   }
   
-  try {
-    const response = await fetch(request)
-    if (response.ok) {
-      cache.put(request, response.clone())
-    }
-    return response
-  } catch (error) {
-    throw error
+  const response = await fetch(request)
+  if (response.ok) {
+    cache.put(request, response.clone())
   }
+  return response
 }
 
 // Page request handler - instant loading
@@ -319,7 +315,7 @@ async function handleFontRequest(request) {
   }
 }
 
-async function handleImageRequest(request) {
+async function handleImageRequestAdvanced(request) {
   const cache = await caches.open(IMAGE_CACHE)
   const cached = await cache.match(request)
   
