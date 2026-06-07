@@ -1,0 +1,3 @@
+## 2024-05-24 - Root Component Search Inputs CAUSE O(N) Re-renders
+**Learning:** The architectural pattern in `Home.jsx` and `Explore.jsx` where search inputs trigger full page re-renders on every keystroke causes O(N) performance bottlenecks for list item components (like `ModelCard`) if they are not memoized.
+**Action:** Always wrap list item components in `React.memo` when they are rendered inside a grid/list in a parent component that has search/filter inputs to prevent unnecessary O(N) re-rendering.
