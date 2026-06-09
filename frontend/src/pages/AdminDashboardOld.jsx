@@ -28,6 +28,7 @@ import {
   Loader2,
   ChevronDown,
   ChevronUp,
+  Info,
   RefreshCw,
   LineChart,
   DollarSign,
