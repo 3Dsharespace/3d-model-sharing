@@ -1,0 +1,3 @@
+## 2024-05-18 - Search Inputs trigger O(N) Re-renders
+**Learning:** React state updates on every keystroke in search inputs in root components like `Home.jsx` and `Explore.jsx` trigger full page re-renders. This causes O(N) re-renders for all list items like `ModelCard`.
+**Action:** Always wrap list item components (e.g., `ModelCard`) in `React.memo` to prevent O(N) re-rendering performance bottlenecks when they only rely on unchanged props.
