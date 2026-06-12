@@ -5,8 +5,8 @@
  * Helps test your 3D website on mobile devices during development
  */
 
-const { execSync } = require('child_process');
-const os = require('os');
+import { execSync } from 'child_process';
+import os from 'os';
 
 function getLocalIP() {
   const interfaces = os.networkInterfaces();
@@ -20,11 +20,11 @@ function getLocalIP() {
   return 'localhost';
 }
 
-function generateQRCode(url) {
+async function generateQRCode(url) {
   try {
-    const qr = require('qrcode-terminal');
+    const qr = await import('qrcode-terminal');
     console.log('\n📱 Scan this QR code with your mobile device:');
-    qr.generate(url, { small: true });
+    qr.default.generate(url, { small: true });
   } catch (e) {
     console.log('\n📱 To install QR code generator: npm install qrcode-terminal');
     console.log(`📱 Or manually navigate to: ${url}`);
@@ -73,7 +73,7 @@ function displayMobileTips() {
   `);
 }
 
-function main() {
+async function main() {
   console.log('🚀 Starting Mobile Development Server...\n');
   
   const localIP = getLocalIP();
@@ -83,7 +83,7 @@ function main() {
   console.log(`🖥️  Local: http://localhost:${port}`);
   console.log(`📱 Mobile: ${localUrl}`);
   
-  generateQRCode(localUrl);
+  await generateQRCode(localUrl);
   displayMobileTips();
   
   console.log('\n🏃 Starting development server...\n');
@@ -103,8 +103,14 @@ function main() {
   }
 }
 
-if (require.main === module) {
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+if (process.argv[1] === __filename) {
   main();
 }
 
-module.exports = { getLocalIP, displayMobileTips };
+export { getLocalIP, displayMobileTips };
