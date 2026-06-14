@@ -68,4 +68,6 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+// Optimization: Added React.memo to prevent O(N) re-rendering bottleneck when
+// parent components (like Home and Explore) re-render on search input keystrokes
+export default React.memo(ModelCard)
