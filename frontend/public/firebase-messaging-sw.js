@@ -1,3 +1,4 @@
+/* eslint-env serviceworker */
 /**
  * Firebase Messaging Service Worker
  * Handles background push notifications
@@ -6,8 +7,8 @@
 // Give the service worker access to Firebase Messaging.
 // Note that you can only use Firebase Messaging here. Other Firebase libraries
 // are not available in the service worker.
-importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
+/* global importScripts, firebase, clients */ importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
+/* global importScripts, firebase, clients */ importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
 
 // Initialize the Firebase app in the service worker by providing
 // your app's Firebase config object.
@@ -26,7 +27,7 @@ const messaging = firebase.messaging();
 
 // Handle background messages
 messaging.onBackgroundMessage((payload) => {
-  console.log('📨 Background message received:', payload);
+  console.info('📨 Background message received:', payload);
 
   const notificationTitle = payload.notification?.title || 'New notification';
   const notificationOptions = {
@@ -55,7 +56,7 @@ messaging.onBackgroundMessage((payload) => {
 
 // Handle notification clicks
 self.addEventListener('notificationclick', (event) => {
-  console.log('🔔 Notification clicked:', event);
+  console.info('🔔 Notification clicked:', event);
   
   const notification = event.notification;
   const action = event.action;
@@ -105,7 +106,7 @@ self.addEventListener('notificationclick', (event) => {
 
 // Handle push subscription changes
 self.addEventListener('pushsubscriptionchange', (event) => {
-  console.log('📱 Push subscription changed');
+  console.info('📱 Push subscription changed');
   
   event.waitUntil(
     // Re-subscribe with new subscription
@@ -113,10 +114,10 @@ self.addEventListener('pushsubscriptionchange', (event) => {
       userVisibleOnly: true,
       applicationServerKey: 'BPdUFQTiqcEkFFnW6wO37seXMG29xF0rZgUJocTyFJ4sZ4VCGYL4Nh5h7J1YJRGpO24p1RUGYK0lafCe-DxRDy4'
     }).then((subscription) => {
-      console.log('✅ Re-subscribed to push notifications');
+      console.info('✅ Re-subscribed to push notifications');
       // Send new subscription to server
     })
   );
 });
 
-console.log('🔧 Firebase Messaging Service Worker loaded');
+console.info('🔧 Firebase Messaging Service Worker loaded');
