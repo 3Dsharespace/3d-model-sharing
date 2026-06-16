@@ -221,6 +221,8 @@ ${creators.map((creator) => {
 </urlset>
 `
 
+/* eslint-disable no-console */
+
 try {
   await mkdir(distDir, { recursive: true })
   const [models, creators] = await Promise.all([

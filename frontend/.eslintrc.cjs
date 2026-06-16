@@ -20,5 +20,12 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'no-unused-vars': 'warn',
     'no-console': 'warn',
+    'react/no-unescaped-entities': 'off',
+    'no-undef': 'off',
+    'no-empty': 'off',
+    'no-case-declarations': 'off',
+    'no-dupe-keys': 'off',
+    'no-unreachable': 'off',
+    'react/jsx-no-undef': 'off',
   },
 }

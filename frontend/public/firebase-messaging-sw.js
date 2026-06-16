@@ -6,6 +6,8 @@
 // Give the service worker access to Firebase Messaging.
 // Note that you can only use Firebase Messaging here. Other Firebase libraries
 // are not available in the service worker.
+/* global importScripts, firebase, clients */
+
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
 
@@ -112,7 +114,7 @@ self.addEventListener('pushsubscriptionchange', (event) => {
     self.registration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: 'BPdUFQTiqcEkFFnW6wO37seXMG29xF0rZgUJocTyFJ4sZ4VCGYL4Nh5h7J1YJRGpO24p1RUGYK0lafCe-DxRDy4'
-    }).then((subscription) => {
+    }).then(() => {
       console.log('✅ Re-subscribed to push notifications');
       // Send new subscription to server
     })

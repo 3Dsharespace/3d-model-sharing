@@ -201,15 +201,11 @@ async function handleStaticRequest(request) {
     return cachedResponse
   }
   
-  try {
-    const response = await fetch(request)
-    if (response.ok) {
-      cache.put(request, response.clone())
-    }
-    return response
-  } catch (error) {
-    throw error
+  const response = await fetch(request)
+  if (response.ok) {
+    cache.put(request, response.clone())
   }
+  return response
 }
 
 // Page request handler - instant loading
@@ -319,31 +315,7 @@ async function handleFontRequest(request) {
   }
 }
 
-async function handleImageRequest(request) {
-  const cache = await caches.open(IMAGE_CACHE)
-  const cached = await cache.match(request)
-  
-  if (cached) {
-    // Serve from cache immediately and refresh in background
-    backgroundRefresh(request, cache)
-    return cached
-  }
-  
-  try {
-    const response = await fetch(request)
-    if (response.ok) {
-      const clonedResponse = response.clone()
-      await cache.put(request, clonedResponse)
-    }
-    return response
-  } catch (error) {
-    console.warn('Image fetch failed:', error)
-    // Return SVG placeholder for failed images
-    return new Response(createImagePlaceholder(), {
-      headers: { 'Content-Type': 'image/svg+xml' }
-    })
-  }
-}
+// Replaced duplicate handleImageRequest function
 
 function createImagePlaceholder() {
   return `<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">

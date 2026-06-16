@@ -58,6 +58,8 @@ ${pages.map((page) => `  <url>
 </urlset>
 `
 
+/* eslint-disable no-console */
+
 await mkdir(distDir, { recursive: true })
 await writeFile(join(distDir, 'sitemap.xml'), sitemap)
 
