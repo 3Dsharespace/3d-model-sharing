@@ -1,0 +1,3 @@
+## 2024-05-24 - O(N) Re-rendering Bottleneck on Search Keystrokes
+**Learning:** The frontend application's root components (like `Home.jsx` and `Explore.jsx`) have an architectural pattern where search inputs trigger a full page re-render on every single keystroke. When rendering long lists of items like `ModelCard`, this causes O(N) re-renders, severely degrading typing performance.
+**Action:** Always wrap list item components (e.g., `ModelCard`) in `React.memo` to prevent them from re-rendering unless their props change. This isolates the keystroke re-renders to just the search input and its immediate context.
