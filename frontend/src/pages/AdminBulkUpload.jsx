@@ -925,7 +925,7 @@ const AdminBulkUpload = () => {
 
     for (const item of pendingItems) {
       // Keep requests one by one so the local AI helper stays stable.
-      // eslint-disable-next-line no-await-in-loop
+
       await generateAiForItem(item.id)
     }
 
