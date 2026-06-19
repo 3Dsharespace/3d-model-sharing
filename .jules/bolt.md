@@ -1,0 +1,3 @@
+## 2025-02-28 - Missing React.memo() on list items causes O(N) re-renders
+**Learning:** Found a common architectural pattern in this application: search inputs placed directly in root components (like `Home.jsx` and `Explore.jsx`) trigger full page re-renders on every keystroke. Because the components rendering the long lists of items (`ModelCard`) were not memoized, this caused O(N) component re-renders per keystroke, degrading typing responsiveness significantly on pages with many results.
+**Action:** Always wrap child list items (e.g., `ModelCard`) in `React.memo` when rendering arrays of data, especially if they are siblings or children to highly active state variables like text inputs.
