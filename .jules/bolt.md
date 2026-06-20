@@ -1,0 +1,3 @@
+## 2024-05-24 - Search Input Re-renders in React Root Components
+**Learning:** In root components like `Home.jsx` and `Explore.jsx`, search inputs currently trigger full page re-renders on every keystroke because the input state is maintained at the root component level. When rendering lists of models, this causes O(N) re-renders for every `ModelCard` on the page, creating a noticeable performance bottleneck during typing.
+**Action:** Always wrap list item components like `ModelCard` in `React.memo` to prevent O(N) re-rendering when parent components re-render frequently due to local state changes like search queries.
