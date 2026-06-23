@@ -1,0 +1,3 @@
+## 2025-02-28 - [React.memo missing on list items with frequent parent state updates]
+**Learning:** The frontend application exhibits an architectural pattern where search inputs in root components (like `Home.jsx` and `Explore.jsx`) trigger full page re-renders on every keystroke because the search query is kept as state at the top level and updated on every change. When dealing with lists of complex components like `ModelCard`, this causes an O(N) re-rendering performance bottleneck.
+**Action:** Always wrap list item components (e.g., `ModelCard`) in `React.memo` to prevent unnecessary re-renders when parent state (like search queries) updates frequently but the props for the list items haven't changed.
