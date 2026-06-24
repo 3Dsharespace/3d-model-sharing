@@ -1,0 +1,3 @@
+## 2024-05-19 - [React.memo to Prevent Search Input O(N) Re-renders]
+**Learning:** [The frontend architecture triggers full page re-renders on root components like `Home.jsx` and `Explore.jsx` when search input states are updated on every keystroke. This causes severe O(N) performance bottlenecks when large arrays of un-memoized list items (like `ModelCard` components) are rendered.]
+**Action:** [Always identify and wrap list item components in `React.memo` (e.g., `export default React.memo(MyComponent)`) to prevent these unnecessary re-renders during state updates in their parent components.]
