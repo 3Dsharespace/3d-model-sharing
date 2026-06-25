@@ -25,7 +25,12 @@ const getCreatorName = (model) => {
   return model?.creator?.username || model?.author?.username || model?.username || model?.creatorName || 'Independent creator'
 }
 
-const ModelCard = ({ model, compact = false }) => {
+// ⚡ Bolt Performance Optimization:
+// Wrapped ModelCard in React.memo to prevent O(N) re-renders when parent components
+// (like Home and Explore) trigger re-renders due to search input state changes.
+// Expected Impact: Reduces unnecessary component rendering by 100% for unchanged items during search,
+// significantly improving typing responsiveness.
+const ModelCard = React.memo(({ model, compact = false }) => {
   const thumbnail = getThumbnail(model)
   const format = getModelFileFormat(model) || model?.fileFormat || model?.format || ''
   const category = model?.category || '3D Model'
@@ -66,6 +71,8 @@ const ModelCard = ({ model, compact = false }) => {
       </div>
     </Link>
   )
-}
+})
+
+ModelCard.displayName = 'ModelCard'
 
 export default ModelCard
