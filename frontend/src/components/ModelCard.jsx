@@ -25,7 +25,10 @@ const getCreatorName = (model) => {
   return model?.creator?.username || model?.author?.username || model?.username || model?.creatorName || 'Independent creator'
 }
 
-const ModelCard = ({ model, compact = false }) => {
+// Optimization: Wrap in React.memo to prevent O(N) re-rendering bottlenecks
+// caused by search inputs in root components (Home, Explore) that trigger full
+// page re-renders on every keystroke.
+const ModelCard = React.memo(({ model, compact = false }) => {
   const thumbnail = getThumbnail(model)
   const format = getModelFileFormat(model) || model?.fileFormat || model?.format || ''
   const category = model?.category || '3D Model'
@@ -66,6 +69,6 @@ const ModelCard = ({ model, compact = false }) => {
       </div>
     </Link>
   )
-}
+})
 
 export default ModelCard
