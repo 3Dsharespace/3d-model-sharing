@@ -1,0 +1,3 @@
+## 2024-06-28 - [React.memo missing in O(N) re-rendering lists]
+**Learning:** Found an architectural pattern in frontend root components (`Home.jsx` and `Explore.jsx`) where typing in a search input causes the entire page to re-render on every keystroke. This causes all list items (`ModelCard` components) in the `asset-grid` to unnecessarily re-render, leading to an O(N) performance degradation as the result list grows.
+**Action:** Always wrap repeating list item components (like `ModelCard`, `UserCard`, etc.) with `React.memo` when rendering them inside views that have stateful search/filter inputs at the root level.
