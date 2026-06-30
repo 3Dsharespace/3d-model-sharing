@@ -1,0 +1,3 @@
+## 2024-07-01 - React.memo on List Components in Search Views
+**Learning:** The frontend application exhibits an architectural pattern where search inputs in root components (like `Home.jsx` and `Explore.jsx`) trigger full page re-renders on every keystroke. Because the component rendering a list of items didn't have memoization, this caused an O(N) re-rendering performance bottleneck.
+**Action:** Always wrap list item components (e.g., `ModelCard`) in `React.memo` to prevent O(N) re-rendering performance bottlenecks when they're rendered as children of components with frequent state updates (like search inputs).
