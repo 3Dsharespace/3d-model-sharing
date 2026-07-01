@@ -1,0 +1,3 @@
+## 2024-05-15 - React.memo for ModelCard
+**Learning:** The frontend application's root components (like Home and Explore) trigger full page re-renders on every keystroke in search inputs because the state is kept locally in the component. This causes O(N) re-rendering of all rendered `ModelCard` components, creating a performance bottleneck during search typing.
+**Action:** Always wrap frequently rendered list item components (e.g., `ModelCard`) in `React.memo` to prevent these unnecessary O(N) re-renders and improve input responsiveness.
