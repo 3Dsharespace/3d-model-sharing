@@ -68,4 +68,5 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+// Performance optimization: prevent unnecessary re-renders on keystrokes in search views
+export default React.memo(ModelCard)
