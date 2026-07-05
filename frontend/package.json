@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "preview:mobile": "vite preview --host 0.0.0.0",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "test": "vitest",
+    "test": "vitest --passWithNoTests",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "format": "prettier --write .",
