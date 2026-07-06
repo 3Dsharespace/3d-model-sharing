@@ -1,0 +1,3 @@
+## 2024-05-24 - React.memo on List Item Components
+**Learning:** In the frontend React application, search inputs in root components (like `Home.jsx` and `Explore.jsx`) trigger full page re-renders on every keystroke because the input state is maintained at the root component level. When rendering lists of items (e.g., `ModelCard` in `Home.jsx` and `Explore.jsx`), this causes O(N) re-renders, creating a performance bottleneck.
+**Action:** Always wrap list item components (e.g., `ModelCard`) in `React.memo` to prevent unnecessary re-renders when parent components update unrelated state like search inputs.

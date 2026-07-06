@@ -25,7 +25,9 @@ const getCreatorName = (model) => {
   return model?.creator?.username || model?.author?.username || model?.username || model?.creatorName || 'Independent creator'
 }
 
-const ModelCard = ({ model, compact = false }) => {
+// React.memo prevents O(N) unnecessary re-renders when parent components
+// (like Home or Explore) update state (like search inputs).
+const ModelCard = React.memo(({ model, compact = false }) => {
   const thumbnail = getThumbnail(model)
   const format = getModelFileFormat(model) || model?.fileFormat || model?.format || ''
   const category = model?.category || '3D Model'
@@ -66,6 +68,9 @@ const ModelCard = ({ model, compact = false }) => {
       </div>
     </Link>
   )
-}
+})
+
+// Optional: Add a display name for easier debugging in React DevTools
+ModelCard.displayName = 'ModelCard'
 
 export default ModelCard
