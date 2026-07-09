@@ -68,4 +68,6 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+// Wrap in React.memo to prevent O(N) re-renders when root components (Home/Explore)
+// update their search input state on every keystroke
+export default React.memo(ModelCard)

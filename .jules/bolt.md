@@ -1,0 +1,3 @@
+## 2024-03-24 - React.memo on List Item Components
+**Learning:** Found an architectural pattern where search inputs in root components (`Home.jsx` and `Explore.jsx`) trigger full page re-renders on every keystroke. Because they render large lists of `ModelCard` components, this causes O(N) re-rendering performance bottlenecks on every keystroke.
+**Action:** Always wrap list item components (like `ModelCard`) in `React.memo` to prevent these unnecessary and expensive O(N) re-renders, especially when their props (`model`, `compact`) don't frequently change.
