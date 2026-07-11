@@ -1,0 +1,3 @@
+## 2024-03-24 - [Unnecessary Full Page Re-renders]
+**Learning:** The frontend application exhibits an architectural pattern where search inputs in root components (like `Home.jsx` and `Explore.jsx`) trigger full page re-renders on every keystroke. Rendering a long list of items (e.g. `ModelCard`) during each keystroke can result in severe O(N) performance bottlenecks.
+**Action:** Always wrap list item components (e.g., `ModelCard`) in `React.memo` to prevent unnecessary re-renders when parent state unrelated to the child props updates.

@@ -68,4 +68,7 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+// ⚡ BOLT OPTIMIZATION: Wrapped ModelCard in React.memo to prevent O(N) re-renders
+// when parent components (like Home or Explore) update state on search keystrokes.
+// Expected Impact: Reduces unnecessary component re-renders when parent state changes but model prop remains unchanged.
+export default React.memo(ModelCard)
