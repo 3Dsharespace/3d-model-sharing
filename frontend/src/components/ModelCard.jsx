@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { getModelAltText, getModelFileFormat, getModelUrl } from '../lib/modelLinks'
 
@@ -69,4 +69,4 @@ const ModelCard = ({ model, compact = false }) => {
 }
 
 // Wrapped in React.memo to prevent O(N) re-rendering when root components (e.g., Home, Explore) update volatile state like search queries on keystrokes
-export default React.memo(ModelCard)
+export default memo(ModelCard)
