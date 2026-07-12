@@ -1,0 +1,3 @@
+## 2024-07-12 - Prevent O(N) re-rendering on search inputs in root components
+**Learning:** In root components like `Home.jsx` and `Explore.jsx`, the state of the search query is updated on every keystroke. Because the list item components (`ModelCard`) were not memoized, this caused O(N) re-renders for the entire asset grid on every keystroke, which is a significant performance bottleneck for large lists.
+**Action:** Always wrap list item components (e.g., `ModelCard`) in `React.memo` to prevent O(N) re-rendering performance bottlenecks when they are rendered inside components that have highly volatile state (like a search input).

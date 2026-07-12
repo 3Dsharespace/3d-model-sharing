@@ -68,4 +68,5 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+// Wrapped in React.memo to prevent O(N) re-rendering when root components (e.g., Home, Explore) update volatile state like search queries on keystrokes
+export default React.memo(ModelCard)
