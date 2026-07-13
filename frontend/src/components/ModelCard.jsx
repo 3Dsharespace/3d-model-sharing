@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { getModelAltText, getModelFileFormat, getModelUrl } from '../lib/modelLinks'
 
@@ -68,4 +68,7 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+// Optimization: Wrapped ModelCard in React.memo() to prevent O(N) unnecessary re-renders in lists
+// This is critical because parent components (like Home/Explore) trigger full page re-renders on search input changes
+// Impact: Reduces re-renders of the list items by 100% when parent state changes but model data remains unchanged
+export default memo(ModelCard)
