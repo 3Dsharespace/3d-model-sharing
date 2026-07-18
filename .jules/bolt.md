@@ -1,0 +1,3 @@
+## 2024-05-15 - Unmemoized list items in search views cause O(N) re-renders
+**Learning:** In root components like `Home.jsx` and `Explore.jsx`, search inputs trigger full page re-renders on every keystroke. Because the list items (like `ModelCard`) are not memoized, this causes an O(N) re-rendering bottleneck for the entire list on every key press, severely degrading typing performance.
+**Action:** Always wrap list item components (e.g., `ModelCard`) in `React.memo` in this architecture to prevent unnecessary re-renders when parent components update state that doesn't affect the list item props.
