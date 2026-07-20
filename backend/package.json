@@ -8,6 +8,7 @@
     "dev": "nodemon src/server.js",
     "build": "echo 'Backend is ready to run'",
     "test": "jest",
+    "lint": "echo 'No linting configured'",
     "db:generate": "npx prisma generate",
     "db:push": "npx prisma db push",
     "db:studio": "npx prisma studio"
