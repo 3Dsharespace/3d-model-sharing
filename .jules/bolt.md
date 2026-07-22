@@ -1,0 +1,3 @@
+## 2024-05-18 - Search Inputs Triggering O(N) Re-renders
+**Learning:** Found an architectural pattern in root components (like `Home.jsx` and `Explore.jsx`) where search inputs are tied to local state that updates on every keystroke. This triggers full page re-renders. When lists of items (like models) are rendered, this causes an O(N) re-rendering performance bottleneck because every list item re-renders with every keystroke in the search bar.
+**Action:** Always wrap list item components (e.g., `ModelCard`) in `React.memo` to prevent O(N) re-rendering performance bottlenecks when they rely on stable props but their parent components frequently re-render.
