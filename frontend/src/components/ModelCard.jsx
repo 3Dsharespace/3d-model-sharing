@@ -68,4 +68,6 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+// Memoized to prevent O(N) re-renders when parent components (like Home/Explore)
+// update their search state on every keystroke
+export default React.memo(ModelCard)
