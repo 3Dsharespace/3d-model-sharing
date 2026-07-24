@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { getModelAltText, getModelFileFormat, getModelUrl } from '../lib/modelLinks'
 
@@ -68,4 +68,6 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+// ⚡ Bolt: Wrapped in React.memo to prevent O(N) re-renders when parent components
+// update state on every search input keystroke (e.g., Explore.jsx, Home.jsx).
+export default memo(ModelCard)
