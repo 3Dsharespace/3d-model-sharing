@@ -1,0 +1,3 @@
+## 2024-07-29 - O(N) Re-renders in Search Views
+**Learning:** In this codebase, search inputs located in root components (like `Home.jsx` and `Explore.jsx`) trigger full page re-renders on every keystroke because their state (`query` or `searchQuery`) is bound to the parent view without isolation or debouncing. This creates an O(N) re-rendering performance bottleneck as every list item re-renders unnecessarily.
+**Action:** Always wrap repeating list item components (like `ModelCard`) in `React.memo` to prevent O(N) component re-renders when parent state updates independently of the item props.
