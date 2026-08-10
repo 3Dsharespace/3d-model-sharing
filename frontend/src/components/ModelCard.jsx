@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { getModelAltText, getModelFileFormat, getModelUrl } from '../lib/modelLinks'
 
@@ -68,4 +68,5 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+// Memoize to prevent O(N) re-renders when parent components re-render (e.g. on search input change)
+export default memo(ModelCard)
