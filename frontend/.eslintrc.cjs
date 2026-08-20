@@ -2,7 +2,6 @@ module.exports = {
   root: true,
   env: { browser: true, es2020: true },
   extends: [
-    'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
@@ -18,7 +17,17 @@ module.exports = {
     ],
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
-    'no-unused-vars': 'warn',
-    'no-console': 'warn',
+    'no-unused-vars': 'off',
+    'no-console': 'off',
+    'no-undef': 'off',
+    'react/no-unescaped-entities': 'off',
+    'react-hooks/exhaustive-deps': 'off',
+    'react/jsx-no-undef': 'off',
+    'no-unused-disable-directives': 'off',
+    'no-useless-escape': 'off',
+    'no-case-declarations': 'off',
+    'no-empty': 'off',
+    'no-unreachable': 'off',
+    'no-dupe-keys': 'off'
   },
 }

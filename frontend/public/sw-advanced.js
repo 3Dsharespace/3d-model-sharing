@@ -319,7 +319,7 @@ async function handleFontRequest(request) {
   }
 }
 
-async function handleImageRequest(request) {
+async function handleImageRequestAlt(request) {
   const cache = await caches.open(IMAGE_CACHE)
   const cached = await cache.match(request)
   
