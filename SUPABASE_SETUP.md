@@ -32,7 +32,7 @@ This will create:
 - ✅ Indexes for performance
 - ✅ Row Level Security (RLS) policies
 - ✅ Triggers for automatic count updates
-- ✅ Sample data for testing
+- ✅ Sample data for testing. 
 
 ## **Step 4: Configure Authentication**
 
