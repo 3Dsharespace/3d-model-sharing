@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { getModelAltText, getModelFileFormat, getModelUrl } from '../lib/modelLinks'
 
@@ -25,6 +25,7 @@ const getCreatorName = (model) => {
   return model?.creator?.username || model?.author?.username || model?.username || model?.creatorName || 'Independent creator'
 }
 
+// ⚡ Bolt: Wrapped in React.memo to prevent O(N) re-renders when parent search inputs change state
 const ModelCard = ({ model, compact = false }) => {
   const thumbnail = getThumbnail(model)
   const format = getModelFileFormat(model) || model?.fileFormat || model?.format || ''
@@ -68,4 +69,4 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+export default memo(ModelCard)
