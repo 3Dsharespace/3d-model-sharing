@@ -1,0 +1,90 @@
+.electric-border {
+  --electric-light-color: color-mix(in srgb, var(--electric-border-color) 68%, white 32%);
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.eb-canvas-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.eb-canvas {
+  display: block;
+}
+
+.eb-content {
+  position: relative;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.eb-layers {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.eb-glow-1,
+.eb-glow-2,
+.eb-background-glow {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.eb-glow-1 {
+  border: 1px solid color-mix(in srgb, var(--electric-border-color) 62%, transparent);
+  filter: blur(0.5px);
+}
+
+.eb-glow-2 {
+  border: 1px solid color-mix(in srgb, var(--electric-light-color) 42%, transparent);
+  filter: blur(4px);
+  opacity: 0.5;
+}
+
+.eb-background-glow {
+  z-index: -1;
+  background: var(--electric-border-color);
+  filter: blur(18px);
+  opacity: 0.08;
+  transform: scale(1.04);
+}
+
+.explore-electric {
+  border-radius: 2px;
+}
+
+.explore-electric .eb-content > a,
+.explore-electric .eb-content > button {
+  position: relative;
+  border-color: color-mix(in srgb, var(--electric-border-color) 58%, #242424) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--electric-border-color) 16%, transparent);
+}
+
+.explore-electric .eb-content > a:hover,
+.explore-electric .eb-content > button:hover {
+  border-color: color-mix(in srgb, var(--electric-border-color) 74%, #f5f5f5) !important;
+}
+
+.explore-electric--block {
+  display: block;
+  width: fit-content;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eb-canvas-container {
+    display: none;
+  }
+}

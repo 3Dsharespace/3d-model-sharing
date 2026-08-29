@@ -1,0 +1,122 @@
+/**
+ * Apple Human Interface Guidelines — Web Design Tokens
+ * https://developer.apple.com/design/human-interface-guidelines
+ *
+ * Principles: Clarity, Deference, Depth
+ * Grid: 8pt spacing | Touch targets: 44px minimum
+ */
+
+:root {
+  /* Typography — SF Pro system stack */
+  --apple-font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --apple-font-mono: 'SF Mono', ui-monospace, Menlo, Monaco, 'Cascadia Code', monospace;
+
+  /* Type scale (Apple Dynamic Type equivalents) */
+  --apple-text-large-title: 2.125rem;
+  --apple-text-title-1: 1.75rem;
+  --apple-text-title-2: 1.375rem;
+  --apple-text-title-3: 1.25rem;
+  --apple-text-headline: 1.0625rem;
+  --apple-text-body: 1.0625rem;
+  --apple-text-callout: 1rem;
+  --apple-text-subheadline: 0.9375rem;
+  --apple-text-footnote: 0.8125rem;
+  --apple-text-caption-1: 0.75rem;
+  --apple-text-caption-2: 0.6875rem;
+
+  /* Spacing — 8pt grid */
+  --apple-space-1: 0.25rem;
+  --apple-space-2: 0.5rem;
+  --apple-space-3: 0.75rem;
+  --apple-space-4: 1rem;
+  --apple-space-5: 1.25rem;
+  --apple-space-6: 1.5rem;
+  --apple-space-8: 2rem;
+  --apple-space-10: 2.5rem;
+  --apple-space-12: 3rem;
+
+  /* Corner radius */
+  --apple-radius-sm: 0.5rem;
+  --apple-radius-md: 0.625rem;
+  --apple-radius-lg: 0.75rem;
+  --apple-radius-xl: 1rem;
+  --apple-radius-full: 624.9375rem;
+
+  /* Touch target */
+  --apple-touch-min: 2.75rem;
+
+  /* Motion */
+  --apple-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --apple-duration-fast: 200ms;
+  --apple-duration: 350ms;
+
+  /* Dark mode defaults (app uses dark theme) */
+  --apple-bg-primary: #000000;
+  --apple-bg-secondary: #1c1c1e;
+  --apple-bg-tertiary: #2c2c2e;
+  --apple-bg-elevated: #1c1c1e;
+  --apple-bg-elevated-2: #2c2c2e;
+  --apple-bg-grouped: #000000;
+
+  --apple-label-primary: #ffffff;
+  --apple-label-secondary: rgba(235, 235, 245, 0.6);
+  --apple-label-tertiary: rgba(235, 235, 245, 0.3);
+  --apple-label-quaternary: rgba(235, 235, 245, 0.18);
+
+  --apple-separator: rgba(84, 84, 88, 0.65);
+  --apple-separator-opaque: #38383a;
+
+  --apple-system-blue: #0a84ff;
+  --apple-system-blue-hover: #409cff;
+  --apple-system-green: #30d158;
+  --apple-system-red: #ff453a;
+  --apple-system-orange: #ff9f0a;
+  --apple-system-yellow: #ffd60a;
+  --apple-system-purple: #bf5af2;
+  --apple-system-pink: #ff375f;
+  --apple-system-teal: #64d2ff;
+  --apple-system-indigo: #5e5ce6;
+  --apple-system-gray: #98989d;
+
+  --apple-fill-primary: rgba(120, 120, 128, 0.36);
+  --apple-fill-secondary: rgba(120, 120, 128, 0.32);
+  --apple-fill-tertiary: rgba(118, 118, 128, 0.24);
+
+  --apple-material-thin: rgba(30, 30, 30, 0.72);
+  --apple-material-regular: rgba(30, 30, 30, 0.82);
+  --apple-material-thick: rgba(30, 30, 30, 0.92);
+
+  --apple-focus-ring: rgba(10, 132, 255, 0.6);
+}
+
+:not(.dark) {
+  --apple-bg-primary: #ffffff;
+  --apple-bg-secondary: #f2f2f7;
+  --apple-bg-tertiary: #ffffff;
+  --apple-bg-elevated: #ffffff;
+  --apple-bg-elevated-2: #f2f2f7;
+  --apple-bg-grouped: #f2f2f7;
+
+  --apple-label-primary: #000000;
+  --apple-label-secondary: rgba(60, 60, 67, 0.6);
+  --apple-label-tertiary: rgba(60, 60, 67, 0.3);
+  --apple-label-quaternary: rgba(60, 60, 67, 0.18);
+
+  --apple-separator: rgba(60, 60, 67, 0.29);
+  --apple-separator-opaque: #c6c6c8;
+
+  --apple-system-blue: #007aff;
+  --apple-system-blue-hover: #0066d6;
+  --apple-system-green: #34c759;
+  --apple-system-red: #ff3b30;
+
+  --apple-fill-primary: rgba(120, 120, 128, 0.2);
+  --apple-fill-secondary: rgba(120, 120, 128, 0.16);
+  --apple-fill-tertiary: rgba(118, 118, 128, 0.12);
+
+  --apple-material-thin: rgba(255, 255, 255, 0.72);
+  --apple-material-regular: rgba(255, 255, 255, 0.82);
+  --apple-material-thick: rgba(255, 255, 255, 0.92);
+
+  --apple-focus-ring: rgba(0, 122, 255, 0.6);
+}

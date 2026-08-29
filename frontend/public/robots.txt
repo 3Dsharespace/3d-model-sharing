@@ -1,0 +1,94 @@
+User-agent: *
+Allow: /
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# Allow AI answer and citation crawlers to read public pages
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /manage/
+Disallow: /profile/edit
+Disallow: /model/*/edit
+
+# Disallow API endpoints
+Disallow: /api/
+Disallow: /functions/
+
+# Allow important pages
+Allow: /about
+Allow: /privacy
+Allow: /terms
+Allow: /contact
+Allow: /explore
+Allow: /upload
+Allow: /profile/
+Allow: /model/
+Allow: /free-3d-models/
+Allow: /free-3d-model-formats/
+Allow: /free-3d-model-topics/
+Allow: /free-3d-model-images/
+Allow: /guides/
+Allow: /llms.txt
+Allow: /ai-discovery.json
+Allow: /seo-report.json
+Allow: /indexnow-payload.json
+Allow: /rss/pinterest/
+
+# Sitemap location
+Sitemap: https://3dsharespace.com/sitemap-index.xml
+Sitemap: https://3dsharespace.com/sitemap.xml
+Sitemap: https://3dsharespace.com/model-sitemap.xml
+Sitemap: https://3dsharespace.com/image-sitemap.xml
+Sitemap: https://3dsharespace.com/image-page-sitemap.xml
+Sitemap: https://3dsharespace.com/image-gallery-sitemap.xml
+Sitemap: https://3dsharespace.com/creator-sitemap.xml
+Sitemap: https://3dsharespace.com/rss/pinterest/all.xml
+
+# AI crawler summary
+LLMs: https://3dsharespace.com/llms.txt
+AI-Discovery: https://3dsharespace.com/ai-discovery.json
+SEO-Report: https://3dsharespace.com/seo-report.json
+IndexNow-Payload: https://3dsharespace.com/indexnow-payload.json
+
+# Crawl delay (optional - be respectful to servers)
+Crawl-delay: 1
+
+

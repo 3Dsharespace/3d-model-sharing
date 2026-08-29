@@ -1,0 +1,16 @@
+{
+  "name": "3dwebsite",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "install:frontend": "cd frontend && npm ci",
+    "build": "cd frontend && npm run build",
+    "preview": "cd frontend && npm run preview",
+    "ai-assist": "node tools/ai-assist-server.cjs",
+    "test": "cd frontend && npm run test"
+  },
+  "devDependencies": {
+    "react-refresh": "^0.17.0"
+  }
+}
