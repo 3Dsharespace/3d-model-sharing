@@ -4,9 +4,7 @@
 
 Live site:
 
-```text
-[https://dsharespace-v2.web.app/]
-```
+<a href="https://dsharespace-v2.web.app/"></a>
 
 ## Tech Stack
 
