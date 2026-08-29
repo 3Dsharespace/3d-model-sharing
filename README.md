@@ -3,10 +3,8 @@
 3D ShareSpace is a live 3D model sharing website for browsing, uploading, downloading, and managing free 3D assets.
 
 Live site:
-
-```text
 [dsharespace-v2.web.app](https://dsharespace-v2.web.app/)
-```
+
 
 ## Tech Stack
 
