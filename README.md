@@ -236,11 +236,3 @@ If missing, Pinterest export code falls back to:
 https://3dsharespace.com
 ```
 
-## Maintenance Notes
-
-- Keep `frontend` as the active website app.
-- Keep `functions` unless intentionally changing Firebase Functions.
-- Use hosting-only deploys for UI/frontend changes.
-- Do not restore old backup folders unless there is a specific reason.
-- Avoid changing environment variables without checking where they are used.
-- Run `npm run build` before deploying.
