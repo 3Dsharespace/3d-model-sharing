@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { firebaseHelpers } from '../lib/firebase'
@@ -509,7 +509,8 @@ export default function CreatorStorefront() {
 }
 
 // Model Card Component
-function ModelCard({ model }) {
+const ModelCard = memo(function ModelCard({ model }) {
+  // ⚡ Bolt Optimization: Added React.memo to prevent O(N) re-renders when parent lists update
   return (
     <Link to={getModelUrl(model)}>
       <Card className="hover:shadow-lg transition-shadow cursor-pointer">
@@ -543,7 +544,7 @@ function ModelCard({ model }) {
       </Card>
     </Link>
   )
-}
+})
 
 // Collection Card Component
 function CollectionCard({ collection }) {
