@@ -1,0 +1,3 @@
+## 2024-03-24 - React Re-renders in Home and Explore Pages
+**Learning:** Search inputs in root components (like `Home.jsx` and `Explore.jsx`) trigger full page re-renders on every keystroke because the state (`query` or `searchQuery`) is lifted to the root component. This means every time a user types a letter, the entire list of `ModelCard` components re-renders, causing an O(N) performance bottleneck.
+**Action:** When an input updates state frequently in a root component, wrap list item components (like `ModelCard`) in `React.memo` to prevent them from re-rendering unless their specific props change.
