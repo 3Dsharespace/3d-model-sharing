@@ -69,4 +69,5 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+// ⚡ Bolt Optimization: Added React.memo to prevent unnecessary O(N) re-renders in list views during search/filter operations
+export default React.memo(ModelCard)
