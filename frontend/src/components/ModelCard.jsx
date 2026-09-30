@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { getModelAltText, getModelFileFormat, getModelUrl } from '../lib/modelLinks'
 
@@ -31,7 +31,7 @@ const getVisibilityLabel = (model) => {
   return ''
 }
 
-const ModelCard = ({ model, compact = false }) => {
+const ModelCard = memo(({ model, compact = false }) => {
   const thumbnail = getThumbnail(model)
   const format = getModelFileFormat(model) || model?.fileFormat || model?.format || ''
   const category = model?.category || '3D Model'
@@ -67,6 +67,8 @@ const ModelCard = ({ model, compact = false }) => {
       </div>
     </Link>
   )
-}
+})
 
+// ⚡ Bolt Optimization: Wrapped ModelCard in React.memo to prevent O(N) unnecessary re-renders
+// during search input keystrokes in Explore.jsx which updates state on every keystroke.
 export default ModelCard
