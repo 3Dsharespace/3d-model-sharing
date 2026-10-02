@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { getModelAltText, getModelFileFormat, getModelUrl } from '../lib/modelLinks'
 
@@ -31,6 +31,8 @@ const getVisibilityLabel = (model) => {
   return ''
 }
 
+// ⚡ Bolt Optimization: Wrapped ModelCard in React.memo() to prevent unnecessary re-renders
+// This is especially critical in list views like Explore/Home where full page re-renders occur on every keystroke during search.
 const ModelCard = ({ model, compact = false }) => {
   const thumbnail = getThumbnail(model)
   const format = getModelFileFormat(model) || model?.fileFormat || model?.format || ''
@@ -69,4 +71,4 @@ const ModelCard = ({ model, compact = false }) => {
   )
 }
 
-export default ModelCard
+export default memo(ModelCard)
